@@ -1,0 +1,11 @@
+!!! 5
+%html
+  %body
+    %div#container
+      %ul.numbers
+        - for ($i = 0; $i < 5; ++$i)
+          %li= $i + 1
+      
+      %ul.colon
+        - for($i = 0; $i < 2; $i++):
+          %li= $i

@@ -1,0 +1,6 @@
+.buildpath
+.project
+.settings
+tmp/*
+index.haml
+test.php
