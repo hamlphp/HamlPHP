@@ -29,12 +29,11 @@ In your index.php
     <?php
 
     require_once 'src/HamlPHP/HamlPHP.php';
-    
-    $parser = new HamlPHP();
-    
+    require_once 'src/HamlPHP/Storage/FileStorage.php';
+
     // Make sure that a directory _tmp_ exists in your application and it is writable.
-    $parser->getConfiguration()->setCacheDir(dirname(__FILE__) . '/tmp');
-    
-    $file = $parser->parseFile('index.haml');
-    
-    require $file;
+    $parser = new HamlPHP(new FileStorage(dirname(__FILE__) . '/tmp/'));
+
+    $content = $parser->parseFile('index.haml');
+
+    echo $content;
