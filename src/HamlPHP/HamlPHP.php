@@ -9,11 +9,15 @@ class HamlPHP
 
   private $_compiler = null;
   private $_config = null;
+  private $_storage = null;
 
-  public function __construct(Compiler $compiler = null, Config $config = null)
+  public function __construct(
+      Storage $storage = null, Compiler $compiler = null,
+      Config $config = null)
   {
     $this->_compiler = $compiler !== null ? $compiler : new Compiler();
     $this->_config = $config !== null ? $config : new Config();
+    $this->_storage = $storage;
   }
 
   public function getConfiguration()
@@ -31,64 +35,19 @@ class HamlPHP
    * 
    * @param string $fileName
    */
-  public function parseFile($fileName)
+  public function parseFile($fileName, array $templateVars = array())
   {
-    if ($this->_config->isCacheEnabled() && !$this->shouldCache($fileName)) {
-      return $this->getCachedPath($fileName);
-    }
-    return $this->cache($this->_compiler->parseFile($fileName), $fileName);
-  }
-
-  public function parseString($string)
-  {
-    
-  }
-
-  /**
-   * Returns true if a file is already cached.
-   * 
-   * @param string $fileName
-   */
-  private function isCached($fileName)
-  {
-    return file_exists($this->getCachedPath($fileName));
-  }
-
-  private function getCachedPath($fileName)
-  {
-    return $this->_config->getCacheDir() . '/' . $fileName . HamlPHP::CACHED_EXTENSION;
-  }
-
-  /**
-   * Returns true if a file should be cached.
-   * 
-   * @param string $fileName
-   */
-  private function shouldCache($fileName)
-  {
-    if (!$this->isCached($fileName)) {
-      return true;
+    if ($this->_storage === null) {
+      throw new Exception('Storage not set');
     }
 
-    $cachedFileTime = filemtime($this->getCachedPath($fileName));
-    return filemtime($fileName) > $cachedFileTime;
-  }
-
-  /**
-   * Writes an output to a file.
-   * 
-   * @param string $output
-   * @param string $fileName
-   */
-  private function cache($output, $fileName)
-  {
-    $path = $this->getCachedPath($fileName);
-
-    if (!file_exists($path)) {
-      @fopen($path, "x+");
+    if ($this->_config->isCacheEnabled()
+        && $this->_storage->isFresh($fileName)) {
+      return $this->_storage->fetch($fileName, $templateVars);
     }
-    
-    file_put_contents($path, $output);
-    return $path;
+
+    // file is not fresh, so cache it
+    $this->_storage->cache($fileName, $this->_compiler->parseFile($fileName));
+    return $this->_storage->fetch($fileName, $templateVars);
   }
 }
