@@ -4,6 +4,7 @@ require_once 'ElementNode.php';
 require_once 'HamlNode.php';
 require_once 'DoctypeNode.php';
 require_once 'TagNode.php';
+require_once 'CommentNode.php';
 
 class NodeFactory
 {
@@ -28,6 +29,11 @@ class NodeFactory
 
     if (strpos($strippedLine, NodeFactory::DOCTYPE, 0) !== false) {
       return new DoctypeNode($line);
+    }
+
+    if (substr($strippedLine, 0, 1) === NodeFactory::HTML_COMMENT
+        || substr($strippedLine, 0, 2) === NodeFactory::HAML_COMMENT) {
+      return new CommentNode($line);
     }
 
     $elements = array(
