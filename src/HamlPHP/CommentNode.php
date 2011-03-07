@@ -4,10 +4,13 @@ class CommentNode extends HamlNode
 {
   const HTML_COMMENT = '/';
   const HAML_COMMENT = '-#';
+  const CONDITIONAL_COMMENT = "/\/\[([^\\]]+)\]/";
   const HTML_COMMENT_TYPE = 1;
   const HAML_COMMENT_TYPE = 2;
+  const CONDITIONAL_COMMENT_TYPE = 3;
 
   private $_commentType = null;
+  private $_conditionalMatches = array();
 
   public function __construct($line)
   {
@@ -17,9 +20,16 @@ class CommentNode extends HamlNode
 
   private function identifyCommentType()
   {
-    if (substr($this->getHaml(), 0, 1) === CommentNode::HTML_COMMENT) {
+    $haml = $this->getHaml();
+
+    if (preg_match(
+          CommentNode::CONDITIONAL_COMMENT, $haml, $this->_conditionalMatches)) {
+      $this->_commentType = CommentNode::CONDITIONAL_COMMENT_TYPE;
+
+    } else if (substr($haml, 0, 1) === CommentNode::HTML_COMMENT) {
       $this->_commentType = CommentNode::HTML_COMMENT_TYPE;
-    } else if (substr($this->getHaml(), 0, 2) === CommentNode::HAML_COMMENT) {
+
+    } else if (substr($haml, 0, 2) === CommentNode::HAML_COMMENT) {
       $this->_commentType = CommentNode::HAML_COMMENT_TYPE;
     }
   }
@@ -31,6 +41,8 @@ class CommentNode extends HamlNode
         return $this->renderHtmlComment();
       case CommentNode::HAML_COMMENT_TYPE:
         return $this->renderHamlComment();
+      case CommentNode::CONDITIONAL_COMMENT_TYPE:
+        return $this->renderConditionalComment();
       default:
         throw new Exception("Invalid comment type");
     }
@@ -39,14 +51,28 @@ class CommentNode extends HamlNode
   private function renderHtmlComment()
   {
     $output = $this->getSpaces() . "<!--";
-
-    if ($this->hasChildren()) {
-      $output .= "\n" . $this->renderChildren() . $this->getSpaces();
-    } else {
-      $output .= substr($this->getHaml(), 1) . " ";
-    }
-
+    $output .= $this->renderHtmlCommentBody();
     $output .= "-->";
+
+    return $output;
+  }
+
+  private function renderHtmlCommentBody()
+  {
+    if ($this->hasChildren()) {
+      return "\n" . $this->renderChildren() . $this->getSpaces();
+    } else {
+      return substr($this->getHaml(), 1) . " ";
+    }
+  }
+
+  private function renderConditionalComment()
+  {
+    $output =
+        $this->getSpaces() . "<!--[" . $this->_conditionalMatches[1] . "]>";
+
+    $output .= $this->renderHtmlCommentBody();
+    $output .= "<![endif]-->";
 
     return $output;
   }
