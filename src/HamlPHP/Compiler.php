@@ -3,8 +3,32 @@
 require_once 'NodeFactory.php';
 require_once 'RootNode.php';
 
+require_once 'Filter/FilterContainer.php';
+require_once 'Filter/CssFilter.php';
+
 class Compiler
 {
+  private $_nodeFactory = null;
+
+  public function __construct(NodeFactory $factory = null)
+  {
+    $this->_nodeFactory = $factory == null ? new NodeFactory() : $factory;
+    $this->initializeNodeFactory();
+  }
+
+  public function getFilterContainer()
+  {
+    $filterContainer = new FilterContainer();
+    $filterContainer->addFilter(new CssFilter());
+
+    return $filterContainer;
+  }
+
+  protected function initializeNodeFactory()
+  {
+    $this->_nodeFactory->setFilterContainer($this->getFilterContainer());
+  }
+
   /**
    * Compiles haml from a file.
    * 
@@ -36,7 +60,7 @@ class Compiler
     $rootNode = new RootNode();
 
     for ($i = 0, $len = count($rawLines); $i < $len; ++$i) {
-      $rootNode->addNode(NodeFactory::createNode($rawLines[$i]));
+      $rootNode->addNode($this->_nodeFactory->createNode($rawLines[$i]));
     }
 
     return $rootNode->render();

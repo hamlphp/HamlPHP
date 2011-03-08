@@ -51,7 +51,7 @@ class ElementNode extends HamlNode
 
     // render inline content
     $output .= '>' . $content . '</' . $element->getTag() . '>';
-    return $output;
+    return $output . "\n";
   }
 
   private function renderTagContent($content)

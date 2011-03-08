@@ -43,7 +43,7 @@ class RootNode
   public function addNode(RootNode $node = null)
   {
     if ($node === null) {
-      return;
+      return false;
     }
 
     if ($this->shouldGoInsideLastNode($node)) {
@@ -53,7 +53,10 @@ class RootNode
       $node->setParent($this);
       $this->_children[] = $node;
       ++$this->_childrenCount;
+      return true;
     }
+
+    return false;
   }
 
   private function shouldGoInsideLastNode($node)
@@ -83,7 +86,7 @@ class RootNode
     $output = '';
 
     for ($i = 0; $i < $this->_childrenCount; ++$i) {
-      $output .= $this->_children[$i]->render() . "\n";
+      $output .= $this->_children[$i]->render();
     }
 
     return $output;

@@ -5,6 +5,7 @@ require_once 'HamlNode.php';
 require_once 'DoctypeNode.php';
 require_once 'TagNode.php';
 require_once 'CommentNode.php';
+require_once 'FilterNode.php';
 
 class NodeFactory
 {
@@ -18,13 +19,21 @@ class NodeFactory
 
   const VARIABLE = '=';
   const TAG = '-';
+  const FILTER = ':';
 
-  static public function createNode($line)
+  private $_filterContainer = null;
+
+  public function setFilterContainer(FilterContainer $container)
+  {
+    $this->_filterContainer = $container;
+  }
+
+  public function createNode($line)
   {
     $strippedLine = trim($line);
 
-    if ($strippedLine === '') {
-      return null;
+    if (strpos($strippedLine, self::FILTER, 0) === 0) {
+      return new FilterNode($line, $this->_filterContainer);
     }
 
     if (strpos($strippedLine, NodeFactory::DOCTYPE, 0) !== false) {

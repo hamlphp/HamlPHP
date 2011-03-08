@@ -18,7 +18,7 @@ class DoctypeNode extends HamlNode
 
   public function render()
   {
-    return $this->renderDoctype();
+    return $this->renderDoctype() . "\n";
   }
 
   private function renderDoctype()

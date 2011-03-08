@@ -43,6 +43,12 @@ class HamlNode extends RootNode
 
   public function render()
   {
-    return $this->_spaces . $this->_haml;
+    $output = $this->_spaces . $this->_haml . "\n";
+
+    if ($this->hasChildren()) {
+      $output = $output . $this->renderChildren();
+    }
+
+    return $output;
   }
 }
