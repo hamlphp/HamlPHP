@@ -2,7 +2,7 @@
 
 class Element
 {
-  const HAML_REGEXP = '/^(?P<tag>%\w+)?(?P<id>#\w*)?(?P<classes>\.[\w\.\-]*)*(?P<attributes>\((.*)\))?(?P<php>=)?(?P<inline>[^\w\.#\{].*)?$/';
+  const HAML_REGEXP = '/^(?P<tag>%\w+)?(?P<id>#\w*)?(?P<classes>\.[\w\.\-]*)*(?P<attributes>\((.*)\)|\{(.*)\})?(?P<php>=)?(?P<inline>[^\w\.#\{].*)?$/';
 
   const ELEMENT = '%';
   const ID = '#';
@@ -40,8 +40,17 @@ class Element
 
     $this->_php = isset($splitTags['php']) && $splitTags['php'] !== '';
 
-    $this->_attributes = isset($splitTags['attributes']) && $splitTags['attributes'] !== ''
-        ? $this->parseAttributes($splitTags[5]) : null;
+    if (isset($splitTags['attributes']) && $splitTags['attributes'] !== '') {
+      $attrs = '';
+
+      if (!empty($splitTags[5])) {
+        $attrs = $splitTags[5];
+      } else if (!empty($splitTags[6])) {
+        $attrs = $splitTags[6];
+      }
+
+      $this->_attributes = $this->parseAttributes($attrs);
+    }
   }
 
   private function parseClasses($classesString)
@@ -59,7 +68,7 @@ class Element
       $attr = trim($attrs[$len]);
 
       if (strpos($attr, "=>") === false) {
-        throw new Exception('Invalid element attribute');
+        throw new Exception('Invalid element attribute, missing =>');
       }
 
       list($attr, $value) = explode("=>", $attr);
