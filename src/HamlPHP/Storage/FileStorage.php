@@ -1,6 +1,6 @@
 <?php
 
-class FileStorage implements Storage
+class FileStorage implements Storage, ContentEvaluator
 {
   protected $_path = null;
   protected $_extension = null;
@@ -9,6 +9,20 @@ class FileStorage implements Storage
   {
     $this->_path = $cachePath;
     $this->_extension = $extension;
+  }
+
+  public function evaluate($content, array $contentVariables = array(), $id = null)
+  {
+    if (null === $id) {
+      throw new Exception("FileStorage: Could not evaluate. ID is null.");
+    }
+
+    ob_start();
+    extract($contentVariables);
+    require $this->_path . $id . $this->_extension;
+    $result = ob_get_clean();
+
+    return $result;
   }
 
   /**
@@ -43,14 +57,9 @@ class FileStorage implements Storage
    * (non-PHPdoc)
    * @see Storage::fetch()
    */
-  public function fetch($id, array $templateVars = array())
+  public function fetch($id)
   {
-    ob_start();
-    extract($templateVars);
-    require $this->_path . $id . $this->_extension;
-    $result = ob_get_clean();
-
-    return $result;
+    return file_get_contents($this->_path . $id . $this->_extension);
   }
 
   /**

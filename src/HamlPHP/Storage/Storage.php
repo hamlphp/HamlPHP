@@ -3,7 +3,7 @@
 interface Storage
 {
   /**
-   * Returns true if a file is fresh and false if a file should be cached.
+   * Returns true if content is fresh and false if content should be cached.
    */
   public function isFresh($id);
 
@@ -15,7 +15,7 @@ interface Storage
   /**
    * Returns content from a cache
    */
-  public function fetch($id, array $templateVariables);
+  public function fetch($id);
 
   /**
    * Remove cached content.

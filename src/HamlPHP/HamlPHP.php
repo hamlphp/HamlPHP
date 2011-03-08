@@ -2,27 +2,41 @@
 
 require_once 'Config.php';
 require_once 'Compiler.php';
+require_once 'ContentEvaluator/DefaultContentEvaluator.php';
 
 class HamlPHP
 {
-  const CACHED_EXTENSION = '.cached.php';
-
   private $_compiler = null;
   private $_config = null;
   private $_storage = null;
+  private $_contentEvaluator = null;
 
-  public function __construct(
-      Storage $storage = null, Compiler $compiler = null,
-      Config $config = null)
+  public function __construct(Storage $storage, Config $config = null)
   {
-    $this->_compiler = $compiler !== null ? $compiler : new Compiler();
+    $this->_compiler = new Compiler();
     $this->_config = $config !== null ? $config : new Config();
     $this->_storage = $storage;
+
+    if ($this->_storage instanceof ContentEvaluator) {
+      $this->setContentEvaluator($this->_storage);
+    } else {
+      $this->setContentEvaluator(new DefaultContentEvaluator());
+    }
   }
 
   public function getConfiguration()
   {
     return $this->_config;
+  }
+
+  public function setContentEvaluator(ContentEvaluator $contentEvaluator)
+  {
+    $this->_contentEvaluator = $contentEvaluator;
+  }
+
+  public function setCompiler(Compiler $compiler)
+  {
+    $this->_compiler = $compiler;
   }
 
   public function getCompiler()
@@ -37,17 +51,29 @@ class HamlPHP
    */
   public function parseFile($fileName, array $templateVars = array())
   {
+    $content = $this->getContentFromStorage($fileName);
+    return $this->_contentEvaluator->evaluate($content, $templateVars, $fileName);
+  }
+
+  /**
+   * Returns content from a storage
+   * 
+   * @param string $fileName
+   * @return string
+   */
+  public function getContentFromStorage($fileName)
+  {
     if ($this->_storage === null) {
-      throw new Exception('Storage not set');
+        throw new Exception('Storage not set');
     }
 
     if ($this->_config->isCacheEnabled()
         && $this->_storage->isFresh($fileName)) {
-      return $this->_storage->fetch($fileName, $templateVars);
+      return $this->_storage->fetch($fileName);
     }
 
-    // file is not fresh, so cache it
+    // file is not fresh, so compile and cache it
     $this->_storage->cache($fileName, $this->_compiler->parseFile($fileName));
-    return $this->_storage->fetch($fileName, $templateVars);
+    return $this->_storage->fetch($fileName);
   }
 }
