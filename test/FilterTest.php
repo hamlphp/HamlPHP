@@ -2,7 +2,7 @@
 
 require_once 'test_helper.php';
 
-class AttributesTest extends PHPUnit_Framework_TestCase
+class FilterTest extends PHPUnit_Framework_TestCase
 {
   protected $compiler = null;
 
