@@ -38,11 +38,11 @@ class CommentNode extends HamlNode
   {
     switch ($this->_commentType) {
       case CommentNode::HTML_COMMENT_TYPE:
-        return $this->renderHtmlComment();
+        return $this->renderHtmlComment() . "\n";
       case CommentNode::HAML_COMMENT_TYPE:
-        return $this->renderHamlComment();
+        return $this->renderHamlComment() . "\n";
       case CommentNode::CONDITIONAL_COMMENT_TYPE:
-        return $this->renderConditionalComment();
+        return $this->renderConditionalComment() . "\n";
       default:
         throw new Exception("Invalid comment type");
     }

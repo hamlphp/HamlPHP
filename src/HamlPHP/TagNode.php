@@ -40,7 +40,7 @@ class TagNode extends HamlNode
      $line = $matches[1];
      $line .= isset($matches[4]) ? $matches[4] : ':';
 
-     return $this->generateTagContent($line, $matches[2]);
+     return $this->generateTagContent($line, $matches[2]) . "\n";
   }
 
   private function generateTagContent($line, $type)
