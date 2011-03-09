@@ -1,25 +1,23 @@
 <?php
 
-require_once 'AbstractFilter.php';
+require_once 'Filter.php';
 
-class CssFilter extends AbstractFilter
+class CssFilter implements Filter
 {
   public function getIdentifier()
   {
     return 'css';
   }
 
-  public function filter($text)
+  public function filter(HamlNode $node)
   {
-    $filterNode = $this->getFilterNode();
-
-    if (null === $filterNode) {
-      throw new Exception("CssFilter: FilterNode is null.");
+    if (null === $node) {
+      throw new Exception("CssFilter: node is null.");
     }
 
-    $output = $filterNode->getSpaces() . "<style type=\"text/css\">\n";
-    $output .= $text;
-    $output .= $filterNode->getSpaces() . "</style>";
+    $output = $node->getSpaces() . "<style type=\"text/css\">\n";
+    $output .= $node->renderChildren();
+    $output .= $node->getSpaces() . "</style>";
 
     return $output . "\n";
   }

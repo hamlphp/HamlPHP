@@ -7,5 +7,14 @@
       p {
         color: #fff;
       }
+    :plain
+      %p should not render
+      / neither this
   %body
     %p test
+    %p
+      :plain
+        %p testing plain
+          nesting
+            nesting
+            = 2 + 2

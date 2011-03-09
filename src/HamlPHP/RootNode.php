@@ -59,7 +59,7 @@ class RootNode
     return false;
   }
 
-  private function shouldGoInsideLastNode($node)
+  protected function shouldGoInsideLastNode($node)
   {
     if ($this->_childrenCount == 0) {
       return false;

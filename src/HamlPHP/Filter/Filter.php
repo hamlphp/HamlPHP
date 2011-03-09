@@ -10,14 +10,9 @@ interface Filter
   public function getIdentifier();
 
   /**
-   * Filters given text.
+   * Filters given node.
    * 
-   * @param string $text
+   * @param HamlNode object
    */
-  public function filter($text);
-
-  /**
-   * Sets a filter node.
-   */
-  public function setFilterNode($node);
+  public function filter(HamlNode $node);
 }

@@ -23,8 +23,6 @@ class FilterNode extends HamlNode
       throw new Exception(sprintf("Unknown filter '%s'.", $identifier));
     }
 
-    $filter->setFilterNode($this);
-
-    return $filter->filter($this->renderChildren());
+    return $filter->filter($this);
   }
 }
