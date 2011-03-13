@@ -30,7 +30,7 @@ class RootNode
     return $this->_parent !== null;
   }
 
-  public function setIndetationLevel($level)
+  public function setIndentationLevel($level)
   {
     $this->_indentation = $level;
   }

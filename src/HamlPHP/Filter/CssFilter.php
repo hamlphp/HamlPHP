@@ -15,8 +15,15 @@ class CssFilter implements Filter
       throw new Exception("CssFilter: node is null.");
     }
 
+    $plainFilter = new PlainFilter();
+
     $output = $node->getSpaces() . "<style type=\"text/css\">\n";
-    $output .= $node->renderChildren();
+
+    $oldLevel = $node->getIndentationLevel();
+    $node->setIndentationLevel($oldLevel + 2);
+    $output .= $plainFilter->filter($node);
+    $node->setIndentationLevel($oldLevel);
+
     $output .= $node->getSpaces() . "</style>";
 
     return $output . "\n";

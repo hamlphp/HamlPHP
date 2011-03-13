@@ -11,13 +11,32 @@ class HamlNode extends RootNode
     parent::__construct();
     $this->_rawHaml = $line;
     $this->_haml = trim($line);
-    $this->setIndetationLevel(strlen($line) - strlen(ltrim($line)));
-    $this->_spaces = $this->createSpaces();
+    $this->setIndentationLevel(strlen($line) - strlen(ltrim($line)));
   }
 
   public function getSpaces()
   {
     return $this->_spaces;
+  }
+
+  public function setIndentationLevel($level)
+  {
+    $oldLevel = $this->getIndentationLevel();
+    parent::setIndentationLevel($level);
+    $this->_spaces = $this->createSpaces();
+
+    if ($this->hasChildren()) {
+      $children = $this->getChildren();
+
+      for ($i = 0, $len = count($children); $i < $len; $i++) {
+        $childNode = $children[$i];
+        $currentLevel = $this->getIndentationLevel();
+        $childLevel = $childNode->getIndentationLevel();
+        $oldDiff = $childLevel - $oldLevel;
+        $newLevel = $currentLevel + $oldDiff;
+        $childNode->setIndentationLevel($newLevel);
+      }
+    }
   }
 
   public function getRawHaml()
