@@ -32,6 +32,9 @@ class NodeFactory
   {
     $strippedLine = trim($line);
 
+    if($strippedLine == '')
+    	return null;
+    	
     if (strpos($strippedLine, self::FILTER, 0) === 0) {
       return new FilterNode($line, $this->_filterContainer);
     }
