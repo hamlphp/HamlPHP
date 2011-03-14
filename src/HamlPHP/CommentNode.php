@@ -36,16 +36,24 @@ class CommentNode extends HamlNode
 
   public function render()
   {
+    $output = "";
+
     switch ($this->_commentType) {
       case CommentNode::HTML_COMMENT_TYPE:
-        return $this->renderHtmlComment() . "\n";
+        $output = $this->renderHtmlComment() . "\n";
+        break;
       case CommentNode::HAML_COMMENT_TYPE:
-        return $this->renderHamlComment() . "\n";
+        $output = $this->renderHamlComment() . "\n";
+        break;
       case CommentNode::CONDITIONAL_COMMENT_TYPE:
-        return $this->renderConditionalComment() . "\n";
+        $output = $this->renderConditionalComment() . "\n";
+        break;
       default:
-        throw new Exception("Invalid comment type");
+        throw new Exception("Invalid comment type: " . $this->getHaml());
     }
+
+    $interpolation = new Interpolation($output);
+    return $interpolation->render();
   }
 
   private function renderHtmlComment()

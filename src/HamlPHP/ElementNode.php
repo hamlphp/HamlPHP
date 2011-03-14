@@ -66,6 +66,9 @@ class ElementNode extends HamlNode
 
     if ($this->_phpVariable) {
       $content = "<?php echo " . $content . " ?>";
+    } else {
+      $interpolation = new Interpolation($content);
+      $content = $interpolation->render();
     }
 
     return $content;

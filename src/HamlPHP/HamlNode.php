@@ -63,6 +63,8 @@ class HamlNode extends RootNode
   public function render()
   {
     $output = $this->_spaces . $this->_haml . "\n";
+    $interpolation = new Interpolation($output);
+    $output = $interpolation->render();
 
     if ($this->hasChildren()) {
       $output = $output . $this->renderChildren();

@@ -1,0 +1,13 @@
+!!! 5
+%html
+  %head
+    :css
+      p { color: #{'black'}; }
+  %body
+    #container
+      %p
+        this line has interpolation #{'hello world'}.
+      
+      %p #{'hello world'}
+      %p
+        / #{'hello'}

@@ -23,6 +23,7 @@ class FilterNode extends HamlNode
       throw new Exception(sprintf("Unknown filter '%s'.", $identifier));
     }
 
-    return $filter->filter($this);
+    $interpolation = new Interpolation($filter->filter($this));
+    return $interpolation->render();
   }
 }
