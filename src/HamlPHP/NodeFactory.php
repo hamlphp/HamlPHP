@@ -20,6 +20,7 @@ class NodeFactory
   const VARIABLE = '=';
   const TAG = '-';
   const FILTER = ':';
+  const LOUD_SCRIPT = '=';
 
   private $_filterContainer = null;
 
@@ -58,7 +59,8 @@ class NodeFactory
       return new ElementNode($line);
     }
 
-    if ($strippedLine[0] === NodeFactory::TAG) {
+    if ($strippedLine[0] === NodeFactory::TAG
+        ||$strippedLine[0] === NodeFactory::LOUD_SCRIPT) {
       return new TagNode($line);
     }
 

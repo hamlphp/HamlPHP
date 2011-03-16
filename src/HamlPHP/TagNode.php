@@ -18,36 +18,71 @@ class TagNode extends HamlNode
   );
 
   private $_line = null;
+  
+  private $_isTag = false;
+  
+  /**
+   * Can be either TagNode::SILENT_MODE or TagNode::LOUD_MODE
+   * @var string
+   */
+  private $_mode;
+  
+  /**
+   * The tag this node represents. One of $_tags.
+   * @var string
+   */
+  private $_tag;
+  
+  /**
+   * The php code whether it's a tag or a script
+   * @var string
+   */
+  private $_code;
 
-  const TAG_PATTERN = '/-\s*((\w+)\s*([^\:]+))(:)?/';
-
+  const CODE_PATTERN = '/(?P<mode>[-=])\s*(?P<code>(?P<tag>\w+)\s*([^\:]+):?\s*$|[^\r\n]+)/';
+  const SILENT_MODE = '-';
+  const LOUD_MODE = '=';
+  
   public function __construct($line)
   {
     parent::__construct($line);
     $this->_line = $line;
+    
+    if (!preg_match(TagNode::CODE_PATTERN, $this->_line, $matches)) {
+      throw new InvalidTagException('Line does not match the pattern');
+    }
+    
+    if(isset($matches['tag']) && isset($this->_tags[$matches['tag']])) {
+    	$this->_isTag = true;
+    	$this->_tag = $matches['tag'];
+    }
+    	
+    $this->_mode = $matches['mode'];
+    $this->_code = $matches['code'];
+    
+    if($this->_isTag && TagNode::LOUD_MODE == $this->_mode)
+    	throw new InvalidTagException('Loud mode is not allowed for the tags '.join(', ', array_keys($this->_tags)).
+    		'. Use silent mode (-).');
   }
 
   public function render()
   {
-     if (!preg_match(TagNode::TAG_PATTERN, $this->_line, $matches)) {
-       throw new InvalidTagException('Tag does not match the pattern');
-     }
-
-     if (!array_key_exists($matches[2], $this->_tags)) {
-       throw new InvalidTagException('Invalid control structure ' . $matches[2]);
-     }
-
-     $line = $matches[1];
-     $line .= isset($matches[4]) ? $matches[4] : ':';
-
-     return $this->generateTagContent($line, $matches[2]) . "\n";
+  	if($this->_isTag)
+      return $this->generateTagContent() . "\n";
+    
+    $mode = '';
+    if(TagNode::LOUD_MODE == $this->_mode)
+    	$mode = 'echo ';
+    
+    return $this->getSpaces() . "<?php $mode{$this->_code} ?>\n";
   }
 
-  private function generateTagContent($line, $type)
+  private function generateTagContent()
   {
-    $content = $this->getSpaces() . "<?php " . $line . " ?>";
-    $content .= "\n" . $this->renderChildren() . $this->getSpaces();
-    $content .= "<?php " . $this->_tags[$type] . "; ?>";
+    $content = $this->getSpaces() . "<?php " . $this->_code . " ?>\n";
+    $content .= $this->renderChildren();
+    $content .= $this->getSpaces() . "<?php " . $this->_tags[$this->_tag] . "; ?>";
+    
     return $content;
   }
 }
