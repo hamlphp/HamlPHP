@@ -81,6 +81,6 @@ class HamlPHP
   
   private function generateFileId($filename)
   {
-  	return str_replace(array(':','/','\\'), '_', ltrim($filename, array('/', '\\')));
+  	return str_replace(array(':','/','\\'), '_', ltrim($filename, '/\\'));
   }
 }
