@@ -52,7 +52,7 @@ class HamlPHP
   public function parseFile($fileName, array $templateVars = array())
   {
     $content = $this->getContentFromStorage($fileName);
-    return $this->_contentEvaluator->evaluate($content, $templateVars, $fileName);
+    return $this->_contentEvaluator->evaluate($content, $templateVars, $this->generateFileId($fileName));
   }
 
   /**
@@ -63,17 +63,24 @@ class HamlPHP
    */
   public function getContentFromStorage($fileName)
   {
+  	$fileId = $this->generateFileId($fileName);
+  	
     if ($this->_storage === null) {
         throw new Exception('Storage not set');
     }
 
     if ($this->_config->isCacheEnabled()
-        && $this->_storage->isFresh($fileName)) {
-      return $this->_storage->fetch($fileName);
+        && $this->_storage->isFresh($fileId)) {
+      return $this->_storage->fetch($fileId);
     }
 
     // file is not fresh, so compile and cache it
-    $this->_storage->cache($fileName, $this->_compiler->parseFile($fileName));
-    return $this->_storage->fetch($fileName);
+    $this->_storage->cache($fileId, $this->_compiler->parseFile($fileName));
+    return $this->_storage->fetch($fileId);
+  }
+  
+  private function generateFileId($filename)
+  {
+  	return str_replace(array(':','/','\\'), '_', ltrim($filename, array('/', '\\')));
   }
 }
