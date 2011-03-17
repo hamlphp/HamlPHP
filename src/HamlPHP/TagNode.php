@@ -39,7 +39,7 @@ class TagNode extends HamlNode
    */
   private $_code;
 
-  const CODE_PATTERN = '/(?P<mode>[-=])\s*(?P<code>(?P<tag>\w+)\s*([^\:]+):?\s*$|[^\r\n]+)/';
+  const CODE_PATTERN = '/(?P<mode>[-=])\s*(?P<code>(?P<tag>\w+)\s*([^\:]+)(?P<colon>:)?\s*$|[^\r\n]+)/';
   const SILENT_MODE = '-';
   const LOUD_MODE = '=';
   
@@ -52,13 +52,15 @@ class TagNode extends HamlNode
       throw new InvalidTagException('Line does not match the pattern');
     }
     
+    $this->_mode = $matches['mode'];
+    $this->_code = $matches['code'];
+    
     if(isset($matches['tag']) && isset($this->_tags[$matches['tag']])) {
     	$this->_isTag = true;
     	$this->_tag = $matches['tag'];
+    	if(!isset($matches['colon']))
+	    	$this->_code .= ':';
     }
-    	
-    $this->_mode = $matches['mode'];
-    $this->_code = $matches['code'];
     
     if($this->_isTag && TagNode::LOUD_MODE == $this->_mode)
     	throw new InvalidTagException('Loud mode is not allowed for the tags '.join(', ', array_keys($this->_tags)).
