@@ -12,6 +12,13 @@
     :plain
       %p should not render
       / neither this
+    
+    :javascript
+      $(function() {
+        function helloWorld() {
+          alert('Hello world');
+        }
+      });
   %body
     %p test
     %p
