@@ -10,6 +10,19 @@
     </style>
     %p should not render
     / neither this
+    <script type="text/javascript">
+      $(function() {
+        function helloWorld() {
+          alert('Hello world');
+        }
+      });
+    </script>
+    <?php
+    $variable = 1;
+    function helloWorld() {
+      return 'Hello world';
+    }
+    ?>
   </head>
   <body>
     <p>test</p>

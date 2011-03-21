@@ -6,6 +6,8 @@ require_once 'RootNode.php';
 require_once 'Filter/FilterContainer.php';
 require_once 'Filter/CssFilter.php';
 require_once 'Filter/PlainFilter.php';
+require_once 'Filter/JavascriptFilter.php';
+require_once 'Filter/PhpFilter.php';
 
 class Compiler
 {
@@ -22,6 +24,8 @@ class Compiler
     $filterContainer = new FilterContainer();
     $filterContainer->addFilter(new CssFilter());
     $filterContainer->addFilter(new PlainFilter());
+    $filterContainer->addFilter(new JavascriptFilter());
+    $filterContainer->addFilter(new PhpFilter());
 
     return $filterContainer;
   }
