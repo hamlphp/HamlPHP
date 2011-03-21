@@ -26,7 +26,7 @@ class Interpolation
 
     while ($i < $len) {
       $currentChar = $this->_text[$i];
-      $nextChar = ($i + 1 <= $len) ? $this->_text[$i + 1] : null;
+      $nextChar = ($i + 1 <= $len - 1) ? $this->_text[$i + 1] : null;
 
       if ($interpolationStarted) {
         if ($currentChar === '}') {
