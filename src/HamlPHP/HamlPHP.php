@@ -11,6 +11,11 @@ class HamlPHP
   private $_storage = null;
   private $_contentEvaluator = null;
 
+  // Placeholder until config gets properly implemented
+  public static $Config = array(
+  	'escape_html' => false
+  );
+  
   public function __construct(Storage $storage, Config $config = null)
   {
     $this->_compiler = new Compiler();

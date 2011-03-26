@@ -29,7 +29,7 @@ class NodeFactory
     $this->_filterContainer = $container;
   }
 
-  public function createNode($line)
+  public function createNode($line, Compiler $compiler)
   {
     $strippedLine = trim($line);
 
@@ -56,7 +56,7 @@ class NodeFactory
     );
 
     if (in_array($strippedLine[0], $elements)) {
-      return new ElementNode($line);
+      return new ElementNode($line, $compiler);
     }
 
     if ($strippedLine[0] === NodeFactory::TAG

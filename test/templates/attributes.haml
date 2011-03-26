@@ -1,8 +1,14 @@
 !!! 5
 %html
   %body
-    %div('data-url' => 'aasd')
-      %p('class' => 'paragraph', 'style' => 'background: #fff') Hei
-      %p(class => 'paragraph', style => 'background: #fff') Hei
-      %p(class => paragraph, style => background: #fff; color: #000) Hei
+    %div(data-url = 'aasd')
+      %p(class='paragraph' style='background: #fff') Hei
+      %p(class='paragraph' style='background: #fff') Hei
+      %p(class="paragraph" style="background: #fff; color: #000") Hei
       %p{'class' => 'paragraph'} Hei
+      %p{this => 'att list',
+        is => 'multiline'}
+      %p{'id' => ['this', $item_here],
+        has => {$complex ? 'php' : "nothing"},
+        and => true,
+        is_also => $multiline}

@@ -12,6 +12,8 @@ require_once 'Filter/PhpFilter.php';
 class Compiler
 {
   private $_nodeFactory = null;
+  private $_lines;
+  private $_currLine;
 
   public function __construct(NodeFactory $factory = null)
   {
@@ -63,12 +65,18 @@ class Compiler
    */
   public function parseLines(array $rawLines = array())
   {
+  	$this->_currLine = 0;
+  	$this->_lines = $rawLines;
     $rootNode = new RootNode();
 
-    for ($i = 0, $len = count($rawLines); $i < $len; ++$i) {
-      $rootNode->addNode($this->_nodeFactory->createNode($rawLines[$i]));
+    for ($len = count($rawLines); $this->_currLine < $len; ++$this->_currLine) {
+      $rootNode->addNode($this->_nodeFactory->createNode($rawLines[$this->_currLine], $this));
     }
 
     return $rootNode->render();
+  }
+  
+  public function getNextLine() {
+  	return $this->_lines[++$this->_currLine];
   }
 }

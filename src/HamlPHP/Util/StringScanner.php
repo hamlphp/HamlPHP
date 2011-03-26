@@ -295,7 +295,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 	private function _matched($update_curr)
 	{
 	    $this->_prev = $this->_curr;
-	    $this->_lastMatchBeg = $this->_curr + mb_strpos($this->_rest, $this->_matches[0], null, $this->_encoding);
+	    $this->_lastMatchBeg = $this->_curr + (empty($this->_matches[0]) ? 0 : mb_strpos($this->_rest, $this->_matches[0], 0, $this->_encoding));
 	    $this->_lastMatchEnd = $this->_lastMatchBeg + mb_strlen($this->_matches[0], $this->_encoding);
 	    
 	    if($update_curr)
@@ -311,6 +311,27 @@ class StringScanner extends BaseObject implements ArrayAccess
 		$this->_matches = null;
 	    $this->_lastMatchBeg = null;
 	    $this->_lastMatchEnd = null;
+	}
+	
+	private function _string_updated($keep_pointer)
+	{   
+	    if($keep_pointer)
+	    {
+	    	$this->_size = mb_strlen($this->_string, $this->_encoding);
+	    	$this->_rest = mb_substr($this->_string, $this->_curr, $this->_size, $this->_encoding);
+	    	$this->_restSize = mb_strlen($this->_rest, $this->_encoding);
+	    	
+	    	if($this->_curr > $this->_size)
+	    		throw new Exception('The operation resulted in an invalid pointer position!');
+	    }
+	    else
+	    {
+	    	$this->_prev = null;
+	    	$this->_curr = 0;
+		    $this->_rest = $this->_string;
+	    	$this->_restSize = $this->_size = mb_strlen($this->_string, $this->_encoding);
+		    $this->_matches = $this->_lastMatchBeg = $this->_lastMatchEnd = null;
+	    }
 	}
 	
 	/* ArrayAccess methods */
@@ -439,6 +460,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 	public function concat($str)
 	{
 		$this->_string .= $str;
+		$this->_string_updated(true);
 	}
 	
 	/**
@@ -765,11 +787,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 	 */
 	public function reset()
 	{
-	    $this->_prev = null;
-	    $this->_curr = 0;
-	    $this->_restSize = $this->_size = mb_strlen($this->_string, $this->_encoding);
-	    $this->_rest = $this->_string;
-	    $this->_matches = $this->_lastMatchBeg = $this->_lastMatchEnd = null;
+		$this->_string_updated(false);
 	}
 	
 	/**
@@ -927,9 +945,8 @@ class StringScanner extends BaseObject implements ArrayAccess
 	 * @return string $str
 	 */
 	public function setString($str) {
-		$this->str = $str;
-    	$this->_curr = 0;
-    	$this->_clear_matched();
+		$this->_string = $str;
+	    $this->reset();
     	return $str;
 	}
 
