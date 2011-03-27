@@ -10,25 +10,25 @@ require_once 'BaseObject.php';
  * 
  * @code
  *   $s = new StringScanner('This is an example string');
- *   $s->eos;                      # -&gt; false
+ *   $s->eos;                      # -> false
  * 
- *   echo $s->scan('/\w+/');      # -&gt; "This"
- *   echo $s->scan('/\w+/');      # -&gt; null
- *   echo $s->scan('/\s+/');      # -&gt; " "
- *   echo $s->scan('/\s+/');      # -&gt; null
- *   echo $s->scan('/\w+/');      # -&gt; "is"
- *   $s->eos;                      # -&gt; false
+ *   echo $s->scan('/\w+/');      # -> "This"
+ *   echo $s->scan('/\w+/');      # -> null
+ *   echo $s->scan('/\s+/');      # -> " "
+ *   echo $s->scan('/\s+/');      # -> null
+ *   echo $s->scan('/\w+/');      # -> "is"
+ *   $s->eos;                      # -> false
  * 
- *   echo $s->scan('/\s+/');      # -&gt; " "
- *   echo $s->scan('/\w+/');      # -&gt; "an"
- *   echo $s->scan('/\s+/');      # -&gt; " "
- *   echo $s->scan('/\w+/');      # -&gt; "example"
- *   echo $s->scan('/\s+/');      # -&gt; " "
- *   echo $s->scan('/\w+/');      # -&gt; "string"
- *   $s->eos;                      # -&gt; true
+ *   echo $s->scan('/\s+/');      # -> " "
+ *   echo $s->scan('/\w+/');      # -> "an"
+ *   echo $s->scan('/\s+/');      # -> " "
+ *   echo $s->scan('/\w+/');      # -> "example"
+ *   echo $s->scan('/\s+/');      # -> " "
+ *   echo $s->scan('/\w+/');      # -> "string"
+ *   $s->eos;                      # -> true
  * 
- *   echo $s->scan('/\s+/');      # -&gt; null
- *   echo $s->scan('/\w+/');      # -&gt; null
+ *   echo $s->scan('/\s+/');      # -> null
+ *   echo $s->scan('/\w+/');      # -> null
  * @endcode
  * 
  * <p>
@@ -262,6 +262,13 @@ class StringScanner extends BaseObject implements ArrayAccess
 	
 	    if ($head_only) {
 	    	$regex = $regex[0] . '^' . mb_substr($regex, 1, mb_strlen($regex), $this->_encoding);
+	    }
+	    else
+	    {
+	    	$delim = $regex[0];
+	    	$end_pos = strrpos($regex, $delim);
+	    	
+	    	$regex = "$delim.*(".substr($regex, 1, $end_pos-1).")$delim".substr($regex, $end_pos+1);
 	    }
 	
 	    $ret = preg_match($regex, $this->_rest, $this->_matches);
