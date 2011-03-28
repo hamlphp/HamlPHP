@@ -268,7 +268,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 	    	$delim = $regex[0];
 	    	$end_pos = strrpos($regex, $delim);
 	    	
-	    	$regex = "$delim.*(".substr($regex, 1, $end_pos-1).")$delim".substr($regex, $end_pos+1);
+	    	$regex = "$delim.*?(".substr($regex, 1, $end_pos-1).")$delim".substr($regex, $end_pos+1);
 	    }
 	
 	    $ret = preg_match($regex, $this->_rest, $this->_matches);
