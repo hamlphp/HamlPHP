@@ -130,7 +130,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="class_comment_node.html#ac3083b07ce48226feeaae9dfbaa7d61d">CommentNode</a>
 </li>
 <li>$_compiler
-: <a class="el" href="class_haml_p_h_p.html#ab8f1598583bf26c8c048c6d173742905">HamlPHP</a>
+: <a class="el" href="class_element.html#ab8f1598583bf26c8c048c6d173742905">Element</a>
+, <a class="el" href="class_haml_p_h_p.html#ab8f1598583bf26c8c048c6d173742905">HamlPHP</a>
 </li>
 <li>$_conditionalMatches
 : <a class="el" href="class_comment_node.html#a4caea0f97ebaf1a250680eaa6de43955">CommentNode</a>
@@ -143,6 +144,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>$_curr
 : <a class="el" href="class_string_scanner.html#a8b9e7443f001c1717c7bb0cafd77ac05">StringScanner</a>
+</li>
+<li>$_currLine
+: <a class="el" href="class_compiler.html#a950da6ad0d36ecdcbe6382c06d11989e">Compiler</a>
+</li>
+<li>$_el
+: <a class="el" href="class_element_node.html#a1b32bc6b19ecf10ca06a1798c0164c7b">ElementNode</a>
+</li>
+<li>$_encoding
+: <a class="el" href="class_string_scanner.html#a37d569dfb47810a72ca1cfc5095ad149">StringScanner</a>
 </li>
 <li>$_extension
 : <a class="el" href="class_file_storage.html#a5c8824e9846349e9d3f49db20184f6db">FileStorage</a>
@@ -179,6 +189,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>$_line
 : <a class="el" href="class_tag_node.html#a67c54106d6508a3fad8868fe68e1a264">TagNode</a>
 </li>
+<li>$_lines
+: <a class="el" href="class_compiler.html#a67c21113e9d664e3a8596d25f8fee018">Compiler</a>
+</li>
 <li>$_matches
 : <a class="el" href="class_string_scanner.html#a94a326341ed93694187d74e5593286a8">StringScanner</a>
 </li>
@@ -187,6 +200,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>$_nodeFactory
 : <a class="el" href="class_compiler.html#a69bddc1eaa01a4e87700214d12eba562">Compiler</a>
+</li>
+<li>$_nukeInnerWhitespace
+: <a class="el" href="class_element.html#aca63dbe1b5813b4c638db4755d990b08">Element</a>
+</li>
+<li>$_nukeOuterWhitespace
+: <a class="el" href="class_element.html#a6e1a1789db780b79f3f019b88bcd8dbf">Element</a>
 </li>
 <li>$_parent
 : <a class="el" href="class_root_node.html#a8c040f02d9e695416231845d2aaf7f59">RootNode</a>
@@ -200,6 +219,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>$_phpVariable
 : <a class="el" href="class_element_node.html#ae39b5d97caf66c51dda7151d009ecbc1">ElementNode</a>
 </li>
+<li>$_preserveWhitespace
+: <a class="el" href="class_element.html#a190a85bef773ab1c1970b34cb08e2fc1">Element</a>
+</li>
 <li>$_prev
 : <a class="el" href="class_string_scanner.html#a5f7eb62e7381f9db2350d25fd9d5eaaa">StringScanner</a>
 </li>
@@ -211,6 +233,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>$_restSize
 : <a class="el" href="class_string_scanner.html#a8cda00f6680d65c3c496d0acae40c381">StringScanner</a>
+</li>
+<li>$_scanner
+: <a class="el" href="class_element.html#af5595647a88ae566fc08e989052ed714">Element</a>
+</li>
+<li>$_selfClosing
+: <a class="el" href="class_element.html#ac3bdfdc515af67dd06b9d6451ceed123">Element</a>
 </li>
 <li>$_size
 : <a class="el" href="class_string_scanner.html#a3f3a27f0a14f4760227dbc5ae3288681">StringScanner</a>
@@ -237,11 +265,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>$_type
 : <a class="el" href="class_doctype_node.html#a41480551826add2f719e24e0d44b9715">DoctypeNode</a>
 </li>
+<li>$_useAttsHelper
+: <a class="el" href="class_element.html#a84413e61b457a940ada8b289c8b49d95">Element</a>
+</li>
 <li>$class
 : <a class="el" href="class_base_exception.html#a252ba022809910ea710a068fc1bab657">BaseException</a>
 </li>
 <li>$code
 : <a class="el" href="class_base_exception.html#a7949acdaecc70b9f035c12a7069db132">BaseException</a>
+</li>
+<li>$Config
+: <a class="el" href="class_haml_p_h_p.html#ac2e162a2e94a6861acb555bb17919717">HamlPHP</a>
 </li>
 <li>$file
 : <a class="el" href="class_base_exception.html#aa1bfbd27060176201b271918dff57e8f">BaseException</a>
@@ -321,9 +355,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>HAML_COMMENT_TYPE
 : <a class="el" href="class_comment_node.html#a5558a87f15c4169ada9e74a9a19175be">CommentNode</a>
-</li>
-<li>HAML_REGEXP
-: <a class="el" href="class_element.html#a7643b90041efd1c292b84a2c7f7584bb">Element</a>
 </li>
 <li>HTML5
 : <a class="el" href="class_doctype_node.html#a1ec813ed93a52b3f71683fc9544a1928">DoctypeNode</a>
@@ -410,7 +441,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="footer">Generated on Sun Mar 20 2011 22:24:55 for HamlPHP by&#160;
+      <li class="footer">Generated on Mon Mar 28 2011 05:20:09 for HamlPHP by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </li>
     </ul>

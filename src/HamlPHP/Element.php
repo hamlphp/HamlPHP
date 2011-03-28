@@ -181,7 +181,7 @@ class Element
 	{
 		foreach ($att_arr as $att)
 		{
-			if ($att['t'] == 'php')
+			if ($att['t'] == 'php' || $att['t'] == 'function')
 				return true;
 		}
 		
@@ -373,7 +373,7 @@ class Element
 			'class' => array(),
 			'id' => array()
 		);
-		$litRe = '/(["\\\']).*?\\1(?=[\\s|=])|:?[\\-\\w]*/';
+		$litRe = '/(["\\\']).*?\\1(?=[\\s|=])|:?[\\-\\w:]*/';
 		
 		$scanner->scan('/\\s*\\{?\\s*/');
 		
@@ -383,10 +383,27 @@ class Element
 			
 			$name = trim($scanner->scan($litRe), ':"\'');
 			if (! $name)
-				throw new SyntaxErrorException("Invalid attribute list");
+				throw new SyntaxErrorException("Invalid attribute list. Expecting an attribute name");
 			
 			if (! $scanner->scan('/\s*=>\s*/'))
-				throw new SyntaxErrorException("Invalid attribute list missing =>");
+			{
+				// it's an attribute function
+				if(!($scanner->rest[0] == '('))
+					throw new SyntaxErrorException("Invalid attribute list. Either missing attribute function parameters or attribute value");
+
+				list ($balanced, $value, $rest, $count) = $this->balance($scanner, '(', ')', 0);
+
+				if(!$balanced)
+					throw new SyntaxErrorException("Unbalanced brackets in attribute function");
+					
+				$value = $name.$value;
+				$name = 'fn_'.count($atts);
+				$atts[$name] = array(
+					't' => 'function' , 'v' => $value
+				);
+				$scanner->scan('/\\s*,\\s*/');
+				continue;
+			}
 			
 			switch ($scanner->rest[0])
 			{

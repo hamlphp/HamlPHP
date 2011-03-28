@@ -45,36 +45,41 @@ class ElementNode extends HamlNode
 			if (($atts = $element->getAttributes()) != null)
 			{
 				if (isset($atts['id'])) {
-					$output .= "'id' => " . $this->_renderArrayValue($atts['id'], '_', 'php').',';
+					$output .= "'id' => " . $this->_renderArrayValue($atts['id'], '_', 'php').', ';
 					unset($atts['id']);
 				}
 				
 				if (isset($atts['class'])) {
-					$output .= "'class' => " . $this->_renderArrayValue($atts['class'], ' ', 'php').',';
+					$output .= "'class' => " . $this->_renderArrayValue($atts['class'], ' ', 'php').', ';
 					unset($atts['class']);
 				}
 				
 				foreach ($atts as $name => $att)
 				{
-					$output .= "'$name' => ";
+					$output .= "";
 					switch ($att['t'])
 					{
 						case 'str':
-							$output .= $att['v'] . ', ';
+							$output .= "'$name' => {$att['v']}, ";
 							continue;
 						case 'php':
 							if (is_array($att['v']))
-								$output .= 'array(' . join(',', $att['v']) . ')';
+								$output .= "'$name' => array(" . join(',', $att['v']) . ')';
 							else
-								$output .= $att['v'] . ', ';
+								$output .= "'$name' => {$att['v']}, ";
 							
 							continue;
 						case 'static':
-							$output .= "'$name', ";
+							$output .= "'$name' => '$name', ";
+							continue;
+						case 'function':
+							$output .= "{$att['v']}, ";
 							continue;
 					}
 				}
 			}
+			
+			$output = rtrim($output, ', ');
 			$output .= ')); ?>';
 		}
 		else
@@ -96,10 +101,10 @@ class ElementNode extends HamlNode
 					switch ($att['t'])
 					{
 						case 'str':
-							$output .= " {$name}={$att['v']} ";
+							$output .= " {$name}={$att['v']}";
 							continue;
 						case 'php':
-							$output .= "$name=<?php {$att['v']}; ?>, ";
+							$output .= " $name=<?php {$att['v']}; ?>";
 							
 							continue;
 						case 'static':

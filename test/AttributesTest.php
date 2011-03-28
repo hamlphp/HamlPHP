@@ -11,6 +11,21 @@ class AttributesTest extends PHPUnit_Framework_TestCase
     $this->compiler = new Compiler();
   }
 
+  public function testAttributeFunction()
+  {
+  	$tests = array(
+  		'%p{p_atts()}' => '<p <?php atts(array(p_atts())); ?>></p>',
+  		'.user{user_atts($userId)}' => "<div <?php atts(array('class' => 'user', user_atts(\$userId))); ?>></div>",
+  		'.user.teatcher{user_atts($userId), teatcher_atts($userId, $viewerId)}' => "<div <?php atts(array('class' => 'user teatcher', user_atts(\$userId), teatcher_atts(\$userId, \$viewerId))); ?>></div>"
+  	);
+  	
+  	while(list($haml, $html) = each($tests))
+  	{
+  		$result = trim($this->compiler->parseString($haml));
+  		$this->assertEquals($html, $result, "Failed for: $haml. Expecting: $html | Got: $result");
+  	}
+  }
+  
   public function testAttributes()
   {
     $actual = $this->compiler->parseFile(template('attributes.haml'));
@@ -64,7 +79,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase
   	)));
   	
   	$this->assertEquals(
-  		'<div <?php atts(array(\'class\' => \'paragraph\',\'style\' => $css, \'value\' => "a value", )); ?>></div>',
+  		'<div <?php atts(array(\'class\' => \'paragraph\', \'style\' => $css, \'value\' => "a value", )); ?>></div>',
   		$html,
   		'Failed for multiline attributes with 3 attributes and the middle one containning PHP code'
   	);
@@ -98,15 +113,15 @@ class AttributesTest extends PHPUnit_Framework_TestCase
   	// multiline
   	$html = trim($this->compiler->parseLines(array(
 	  "%p{:id =>['this', \$item_here], ",
-	  "      has => {\$complex ? 'p,h,p' : 'nothing'}, ",
+	  "      has => \$complex ? 'p.h.p' : 'nothing', ",
 	  "      and => true,",
 	  "      is_also => \$multiline," .
-  	  '"xml:lang" => "add \"hardness\"= {, \" ",' .
+  	  'xml:lang => "add \"hardness\"= {, \" ",' .
   	  ':src  => "javascripts/script_#{3 + 7}"}'
   	)));
   	
   	$this->assertEquals(
-  		"<p <?php atts(array('id' => array('this', \$item_here),'has' => \$complex ? 'p,h,p' : 'nothing', 'and' => 'and', 'is_also' => \$multiline, 'xml:lang' => \"add \\\"hardness\\\"= {, \\\" \", 'src' => \"javascripts/script_\".(3 + 7), )); ?>></p>",
+  		"<p <?php atts(array('id' => array('this', \$item_here), 'has' => \$complex ? 'p.h.p' : 'nothing', 'and' => 'and', 'is_also' => \$multiline, 'xml:lang' => \"add \\\"hardness\\\"= {, \\\" \", 'src' => \"javascripts/script_\".(3 + 7), )); ?>></p>",
   		$html,
   		'Failed for multiline attributes with 3 attributes and the middle one containning PHP code'
   	);

@@ -9,6 +9,6 @@
       %p{this => 'att list',
         is => 'multiline'}
       %p{'id' => ['this', $item_here],
-        has => {$complex ? 'php' : "nothing"},
+        has => $complex ? 'php' : "nothing",
         and => true,
         is_also => $multiline}
