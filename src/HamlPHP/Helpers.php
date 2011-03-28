@@ -108,7 +108,7 @@ function id_for($obj, $prefix = '')
 	
 	$counter[$klass]++;
 	
-	return $prefix.$klass.$counter;
+	return $prefix.$klass.$counter[$klass];
 }
 
 /**
