@@ -130,8 +130,7 @@ class Element
 				
 				case '=': // 
 					$this->_php = true;
-					if ($value[0] == '=')
-						$this->_inlineContent = $this->_interpolate(mb_substr($value, 1, - 1));
+					$this->_inlineContent = $this->_interpolate(mb_substr($value, 1));
 					break;
 				
 				case '&': // escape html
