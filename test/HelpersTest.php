@@ -1,6 +1,6 @@
 <?php
 
-require_once '../src/HamlPHP/Helpers.php';
+require_once HAMLPHP_DIR_SRC . '/Helpers.php';
 require_once 'test_helper.php';
 
 class HelpersTest extends PHPUnit_Framework_TestCase
@@ -9,7 +9,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase
 
   public function __construct()
   {
-    $this->compiler = new Compiler();
+    $this->compiler = getTestCompiler();
   }
 
   public function testAttributeFunction()
