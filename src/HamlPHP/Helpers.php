@@ -39,17 +39,18 @@ function atts($atts, $echo=true)
 	
 	foreach ($atts as $name => $value)
 	{
-		if($name != 'id' && $name != 'class' && is_array($value))
+		if((string)$name != 'id' && (string)$name != 'class' && is_array($value))
 		{
 			foreach($value as $k => $v)
 			{
 				// TODO: if we found an Id or a Class attribute here. What should we do? For now, it will replace the original ones instead of append
 				$flatten[$k] = $v;	
 			}
+			unset($atts[$name]);
 		}
 	}
 	
-	array_merge($atts, $flatten);
+	$atts = array_merge($atts, $flatten);
 	
 	foreach ($atts as $name => $value)
 	{
@@ -62,14 +63,14 @@ function atts($atts, $echo=true)
 		}
 		else
 		{
-			if('id' == $name && is_array($value))
+			if('id' == (string)$name && is_array($value))
 			{
 				$str .= ' id="'.join('_', $value);
 			}
-			elseif ('class' == $name && is_array($value))
+			elseif ('class' == (string)$name && is_array($value))
 				$str .= ' class="'.join(' ', $value);
 			else
-				$str .= "$name=".quote($value);
+				$str .= " $name=".quote($value);
 		}
 	}
 	
