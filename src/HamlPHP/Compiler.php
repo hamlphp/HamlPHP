@@ -11,35 +11,23 @@ require_once 'Filter/PhpFilter.php';
 
 class Compiler
 {
-  private $_nodeFactory = null;
+  private $_hamlphp = null;
   private $_lines;
   private $_currLine;
 
-  public function __construct(NodeFactory $factory = null)
+  public function __construct(HamlPHP $hamlphp)
   {
-    $this->_nodeFactory = $factory == null ? new NodeFactory() : $factory;
-    $this->initializeNodeFactory();
+    $this->setHamlPhp($hamlphp);
   }
 
-  public function getFilterContainer()
+  public function setHamlPhp(HamlPHP $hamlphp)
   {
-    $filterContainer = new FilterContainer();
-    $filterContainer->addFilter(new CssFilter());
-    $filterContainer->addFilter(new PlainFilter());
-    $filterContainer->addFilter(new JavascriptFilter());
-    $filterContainer->addFilter(new PhpFilter());
-
-    return $filterContainer;
-  }
-
-  protected function initializeNodeFactory()
-  {
-    $this->_nodeFactory->setFilterContainer($this->getFilterContainer());
+    $this->_hamlphp = $hamlphp;
   }
 
   /**
    * Compiles haml from a file.
-   * 
+   *
    * @param string $fileName
    */
   public function parseFile($fileName)
@@ -49,7 +37,7 @@ class Compiler
 
   /**
    * Compiles haml from a string.
-   * 
+   *
    * @param string $rawString
    */
   public function parseString($rawString)
@@ -60,7 +48,7 @@ class Compiler
 
   /**
    * Compiles haml from an array of lines.
-   * 
+   *
    * @param array $rawLines
    */
   public function parseLines(array $rawLines = array())
@@ -68,14 +56,15 @@ class Compiler
   	$this->_currLine = 0;
   	$this->_lines = $rawLines;
     $rootNode = new RootNode();
+    $nodeFactory = $this->_hamlphp->getNodeFactory();
 
     for ($len = count($rawLines); $this->_currLine < $len; ++$this->_currLine) {
-      $rootNode->addNode($this->_nodeFactory->createNode($rawLines[$this->_currLine], $this));
+      $rootNode->addNode($nodeFactory->createNode($rawLines[$this->_currLine], $this));
     }
 
     return $rootNode->render();
   }
-  
+
   public function getNextLine() {
   	return $this->_lines[++$this->_currLine];
   }
