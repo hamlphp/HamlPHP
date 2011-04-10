@@ -174,7 +174,7 @@ class HamlPHP
         throw new Exception('Storage not set');
     }
 
-    if ($this->_config->isCacheEnabled()
+    if ($this->isCacheEnabled()
         && $this->_storage->isFresh($fileId)) {
       return $this->_storage->fetch($fileId);
     }
