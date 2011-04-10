@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Config.php';
+require_once 'Storage/Storage.php';
 require_once 'Compiler.php';
 require_once 'ContentEvaluator/DefaultContentEvaluator.php';
 
