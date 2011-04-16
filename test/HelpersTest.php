@@ -17,11 +17,11 @@ class HelpersTest extends PHPUnit_Framework_TestCase
   	ob_start();
   	atts(array(array('dir' => 'ltr', 'lang' => 'pt_BR')));
   	$actual = ob_get_clean();
-  	ob_end_clean();
+
   	$expected = ' dir="ltr" lang="pt_BR"';
-  	
+
   	$this->assertEquals(
   		$expected, $actual, "Failed for a single attribute function. Expected: $expected. Got: $actual"
-  	); 
+  	);
   }
 }
