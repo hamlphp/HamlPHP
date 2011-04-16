@@ -66,6 +66,12 @@ class Compiler
   }
 
   public function getNextLine() {
-  	return $this->_lines[++$this->_currLine];
+    $index = ++$this->_currLine;
+
+  	if (isset($this->_lines[$index])) {
+      return $this->_lines[$index];
+  	}
+
+  	return null;
   }
 }
