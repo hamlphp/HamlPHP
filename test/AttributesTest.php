@@ -79,7 +79,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase
   	)));
 
   	$this->assertEquals(
-  		'<div <?php atts(array(\'class\' => \'paragraph\', \'style\' => $css, \'value\' => "a value", )); ?>></div>',
+  		'<div <?php atts(array(\'class\' => \'paragraph\', \'style\' => $css, \'value\' => "a value")); ?>></div>',
   		$html,
   		'Failed for multiline attributes with 3 attributes and the middle one containning PHP code'
   	);
@@ -121,7 +121,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase
   	)));
 
   	$this->assertEquals(
-  		"<p <?php atts(array('id' => array('this', \$item_here), 'has' => \$complex ? 'p.h.p' : 'nothing', 'and' => 'and', 'is_also' => \$multiline, 'xml:lang' => \"add \\\"hardness\\\"= {, \\\" \", 'src' => \"javascripts/script_\".(3 + 7), )); ?>></p>",
+  		"<p <?php atts(array('id' => array('this', \$item_here), 'has' => \$complex ? 'p.h.p' : 'nothing', 'and' => 'and', 'is_also' => \$multiline, 'xml:lang' => \"add \\\"hardness\\\"= {, \\\" \", 'src' => \"javascripts/script_\".(3 + 7))); ?>></p>",
   		$html,
   		'Failed for multiline attributes with 3 attributes and the middle one containning PHP code'
   	);

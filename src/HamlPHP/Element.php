@@ -9,12 +9,12 @@ class SyntaxErrorException extends Exception
 class Element
 {
 	//const HAML_REGEXP = '/^(?P<tag>%\w+)?(?P<id>#\w*)?(?P<classes>\.[\w\.\-]*)*(?P<attributes>\((?P<html_attrs>.+)\)|\{(?P<hash_attrs>.*)\})?(?P<php>=)?(?P<inline>[^\w\.#\{].*)?$/';
-	
+
 
 	const ELEMENT = '%';
 	const ID = '#';
 	const KLASS = '.';
-	
+
 	private $_haml = null;
 	private $_tag = null;
 	private $_id = null;
@@ -25,11 +25,11 @@ class Element
 	private $_scanner;
 	private $_nukeOuterWhitespace;
 	private $_nukeInnerWhitespace;
-	
+
 	private $_selfClosing = false;
 	private $_preserveWhitespace = false;
 	private $_useAttsHelper;
-	
+
 	/**
 	 * @var Compiler
 	 */
@@ -47,27 +47,27 @@ class Element
 	private function parseHaml()
 	{
 		$scanner = $this->_scanner;
-		
+
 		if (! $scanner->check('/(?:%(?P<tag>[\\-:\\w]+))?(?P<attrs>[\\#\\.\\-:\\w]*)?(?P<rest>.*)/'))
 			throw new SyntaxErrorException("Invalid tag: \"${$this->haml}\".");
-		
+
 		if (preg_match('/[\.#](\.|#|\z)/', $scanner['attrs']))
 			throw new SyntaxErrorException("Illegal element: classes and ids must have values.");
-		
+
 		if (!empty($scanner['tag']))
 			$this->_tag = $scanner['tag'];
 		else
 			$this->_tag = 'div';
-		
+
 		$classAndIdAtts = $this->_parseClassAndId($scanner['attrs']);
-		
+
 		$scanner->string = $scanner['rest'];
-		
+
 		$hashAtts = $htmlAtts = $objRef = false;
 		$merge_order = array(
 			$classAndIdAtts
 		);
-		
+
 		while ($scanner->rest)
 		{
 			switch ($scanner->rest[0])
@@ -94,26 +94,26 @@ class Element
 					break 2;
 			}
 		}
-		
+
 		$this->_attributes = $this->_mergeAttributes($merge_order);
-		
+
 		if (! $this->_attributes)
 			$this->_attributes = array();
-		
+
 		$this->_useAttsHelper = $this->_containsPhpAttribute($this->_attributes);
-		
+
 		if ($scanner->rest)
 		{
 			$scanner->scan('/(<>|><|[><])?([=\/\~&!])?(.*)?/');
 			$nuke_whitespace = trim($scanner[1]);
 			$action = $scanner[2];
 			$value = $scanner[3];
-			
+
 			$this->_nukeOuterWhitespace = (mb_strpos($nuke_whitespace, '>') !== false);
 			$this->_nukeInnerWhitespace = (mb_strpos($nuke_whitespace, '<') !== false);
-			
+
 			$escape_html = ($action == '&' || ($action != '!' && HamlPHP::$Config['escape_html']));
-			
+
 			switch ($action)
 			{
 				case '/':
@@ -122,17 +122,17 @@ class Element
 					if(!empty($value))
 						throw new SyntaxErrorException("Self closing tags can't have content.");
 					break;
-				
+
 				case '~': // whitespace preservation
 					throw new Exception("Whitespace preservation (~) is not implemented yet.");
 					$parse = $this->_preserveWhitespace = true;
 					break;
-				
-				case '=': // 
+
+				case '=': //
 					$this->_php = true;
 					$this->_inlineContent = $this->_interpolate(mb_substr($value, 1));
 					break;
-				
+
 				case '&': // escape html
 				case '!': // unescape html
 					throw new Exception("Escape (&) and unescape (!) html features are not implemented yet.");
@@ -150,17 +150,17 @@ class Element
 					}
 					else
 						$this->_interpolate($value, $escape_html);
-					
+
 					break;
-				
+
 				default:
 					$value = trim($value);
 					if(!empty($value))
 						$this->_inlineContent = $this->_interpolate($value, $escape_html);
 			}
-		
+
 		}
-		
+
 	/*
     	 raise SyntaxError.new("Illegal nesting: nesting within a self-closing tag is illegal.", @next_line.index) if block_opened? && self_closing
       raise SyntaxError.new("There's no Ruby code for #{action} to evaluate.", last_line - 1) if parse && value.empty?
@@ -180,22 +180,22 @@ class Element
 	{
 		foreach ($att_arr as $att)
 		{
-			if ($att['t'] == 'php' || $att['t'] == 'function')
+			if (isset($att['t']) && ($att['t'] == 'php' || $att['t'] == 'function'))
 				return true;
 		}
-		
+
 		return false;
 	}
 
 	private function _mergeAttributes($att_arrays)
 	{
 		$merged = array();
-		
+
 		$count = count($att_arrays);
-		
+
 		if ($count == 1)
 			return $att_arrays[0];
-		
+
 		for ($i = 0; $i < $count; $i ++)
 		{
 			foreach ($att_arrays[$i] as $k => $v)
@@ -213,39 +213,39 @@ class Element
 							$att = array_merge($att, $att_arrays[$j][$k]);
 						else
 							$att[] = $att_arrays[$j][$k];
-							
+
 						unset($att_arrays[$j][$k]);
 					}
 				}
-				
+
 				if (count($att) == 1 && !is_array($v))
 					$merged[$k] = $v;
 				else
 					$merged[$k] = $att;
 			}
 		}
-		
+
 		return $merged;
 	}
 
 	private function _parseObjRef($scanner)
 	{
 		$scanner->scan('/\\[*\s*/');
-		
+
 		$obj = $scanner->scan('/[^,\\]]+/');
 		$scanner->scan('/\s*,\s*/');
 		$prefix = $scanner->scan('/[^\\]]*/');
 		if (! $prefix)
 			$prefix = '';
 		$end = trim($scanner->scan('/\s*\\]/'));
-		
+
 		if ($end != ']')
 			throw new SyntaxErrorException("Invalid object reference.");
-		
+
 		return array(
 			'id' => array(array(
 				't' => 'php' , 'v' => "id_for($obj, '$prefix')"
-			)), 
+			)),
 			'class' => array(array(
 				't' => 'php' , 'v' => "class_for($obj, '$prefix')"
 			))
@@ -256,12 +256,12 @@ class Element
 	{
 		$list = new StringScanner($list);
 		$attributes = array();
-		
+
 		while ($list->scan('/([#.])([-:_a-zA-Z0-9]+)/'))
 		{
 			$type = $list[1];
 			$prop = $list[2];
-			
+
 			switch ($type)
 			{
 				case '.':
@@ -272,7 +272,7 @@ class Element
 					break;
 			}
 		}
-		
+
 		return $attributes;
 	}
 
@@ -282,32 +282,32 @@ class Element
 			'class' => array(),
 			'id' => array()
 		);
-		
+
 		$scanner->scan('/\(\s*/');
 		while (! $scanner->scan('/\\s*\\)/'))
 		{
 			$scanner->scan('/\s*/');
-			
+
 			if (! $name = $scanner->scan('/[-:\w]+/'))
 				throw new SyntaxErrorException("Invalid attribute list: {$scanner->string}");
-			
+
 			$scanner->scan('/\s*/');
-			
+
 			// If a equal sign doesn't follow, the value is true
 			if (! $scanner->scan('/=/'))
 				$atts[$name] = array(
 					't' => 'static' , 'v' => true
 				);
 			else
-			{		
+			{
 				$scanner->scan('/\s*/');
-				
+
 				// if we don't find a quote, it's a php value
 				if (! ($quote = $scanner->scan('/["\\\']/')))
 				{
 					if (! $var = $scanner->scan('/\$\w+/')) // in this mode only variables are accepted
 						throw new SyntaxErrorException("Invalid attribute list: {$scanner->string}");
-					
+
 					if($name == 'class' || $name == 'id')
 						$atts[$name][] =  array(
 							't' => 'php' , 'v' => $var
@@ -333,7 +333,7 @@ class Element
 					// we've found a quote, let's scan until the ending quote
 					$scanner->scan("/([^\\\\]*?)$quote/");
 					$content = $scanner[1];
-					
+
 					if($name == 'class' || $name == 'id')
 						$atts[$name][] =  array(
 							't' => 'str' , 'v' => $content
@@ -344,7 +344,7 @@ class Element
 						);
 				}
 			}
-			
+
 			$scanner->scan('/\s*/');
 			if ($scanner->eos)
 			{
@@ -352,13 +352,13 @@ class Element
 				$scanner->concat($next_line);
 			}
 		}
-		
+
 		if(count($atts['id']) == 0)
 			unset($atts['id']);
-		
+
 		if(count($atts['class']) == 0)
 			unset($atts['class']);
-		
+
 		return $atts;
 	}
 
@@ -373,17 +373,17 @@ class Element
 			'id' => array()
 		);
 		$litRe = '/(["\\\']).*?\\1(?=[\\s|=])|:?[\\-\\w:]*/';
-		
+
 		$scanner->scan('/\\s*\\{?\\s*/');
-		
+
 		while (! $scanner->scan('/}/'))
 		{
 			$scanner->scan('/\\s*/');
-			
+
 			$name = trim($scanner->scan($litRe), ':"\'');
 			if (! $name)
 				throw new SyntaxErrorException("Invalid attribute list. Expecting an attribute name");
-			
+
 			if (! $scanner->scan('/\s*=>\s*/'))
 			{
 				// it's an attribute function
@@ -394,7 +394,7 @@ class Element
 
 				if(!$balanced)
 					throw new SyntaxErrorException("Unbalanced brackets in attribute function");
-					
+
 				$value = $name.$value;
 				$name = 'fn_'.count($atts);
 				$atts[$name] = array(
@@ -403,14 +403,14 @@ class Element
 				$scanner->scan('/\\s*,\\s*/');
 				continue;
 			}
-			
+
 			switch ($scanner->rest[0])
 			{
 				case '"':
 				case "'":
 					$quote = $scanner->scan('/["\']/');
 					$value = $scanner->scan("/(.*?[^\\\\])$quote/");
-					
+
 					if($name == 'class' || $name == 'id')
 						$atts[$name][] =  array(
 							't' => 'str' , 'v' => $scanner[1]
@@ -423,11 +423,11 @@ class Element
 						);
 					}
 					break;
-				
+
 				case '[':
 					$value = $scanner->scanUntil('/\]/');
 					$items = mb_substr($value, 1, - 1);
-					
+
 					if($name == 'class' || $name == 'id')
 						$atts[$name][] =  array(
 							't' => 'php' , 'v' => "array($items)"
@@ -437,11 +437,11 @@ class Element
 							't' => 'php' , 'v' => "array($items)"
 						);
 					break;
-				
+
 				case '{':
 					list ($balanced, $value, $rest, $count) = $this->balance($scanner, '{', '}', 0);
 					$value = mb_substr($value, 1, - 1);
-					
+
 					if($name == 'class' || $name == 'id')
 						$atts[$name][] =  array(
 							't' => 'php' , 'v' => $value
@@ -451,7 +451,7 @@ class Element
 							't' => 'php' , 'v' => $value
 						);
 					break;
-				
+
 				default:
 					if ($scanner->scan('/true|false/i'))
 					{
@@ -467,7 +467,7 @@ class Element
 					else
 					{
 						$value = trim($scanner->scanUntil('/.(?=,)|.(?=\\})/'));
-						
+
 						if($name == 'class' || $name == 'id')
 							$atts[$name][] =  array(
 								't' => 'php' , 'v' => $value
@@ -478,7 +478,7 @@ class Element
 							);
 					}
 			}
-			
+
 			$scanner->scan('/\s*(,)\s*/');
 			if ($scanner->eos)
 			{
@@ -486,20 +486,20 @@ class Element
 				$scanner->concat($next_line);
 			}
 		}
-		
+
 		if(count($atts['id']) == 0)
 			unset($atts['id']);
-		
+
 		if(count($atts['class']) == 0)
 			unset($atts['class']);
-		
+
 		return $atts;
 	}
 
 	/**
 	 * Checks if the string has a balanced amount of $start_char and $finish_char pairs
 	 * If you pass a scanner, the pointer of the scanner will be altered!
-	 *  
+	 *
 	 * @param $scanner_or_line The line or a scanner to balance
 	 * @param $start_char The balancing start char
 	 * @param $finish_char The balancing end char
@@ -510,12 +510,12 @@ class Element
 	{
 		$str = '';
 		$regexp = "/(.*?)[\\$start_char\\$finish_char]/";
-		
+
 		if (! ($scanner_or_line instanceof StringScanner))
 			$scanner = new StringScanner($scanner_or_line);
 		else
 			$scanner = $scanner_or_line;
-		
+
 		while ($scanner->scan($regexp))
 		{
 			$str .= $scanner->matched;
@@ -523,13 +523,13 @@ class Element
 				$count ++;
 			if (mb_substr($scanner->matched, - 1, 1) == $finish_char)
 				$count --;
-			
+
 			if ($count == 0)
 				return array(
 					true , trim($str) , $scanner->rest , $count
 				);
 		}
-		
+
 		return array(
 			false , trim($str) , $scanner->rest , $count
 		);
@@ -539,38 +539,38 @@ class Element
 	{
 		if (! preg_match('/(?<!\\\\)\\#\\{/', $str))
 			return $str;
-		
+
 		if ($str[0] != '"' && $str[0] != "'")
 		{
 			$int = new Interpolation($str);
 			return $int->render();
 		}
-		
+
 		$nStr = '';
 		$s = new StringScanner($str);
-		
+
 		$quote = $s->scan('/["\']/');
-		
+
 		while (! $s->eos)
 		{
 			$part = $s->scan('/([^\\\\]*)\\#\\{/');
-			
+
 			if (! $part)
 				break;
-			
+
 			$nStr = $s[1] . $quote . '.(';
-			
+
 			$part = $s->scan('/([^\\\\]*)\\}/');
-			
+
 			if (! $part)
 				throw new SyntaxErrorException("Unclosed interpolation");
-			
+
 			$nStr .= $s[1] . ').' . $quote;
 		}
-		
+
 		if ($s->rest == $quote)
 			return $quote . trim($nStr, ". {$quote}");
-		
+
 		return $quote . $nStr . $s->rest;
 	}
 
@@ -583,7 +583,7 @@ class Element
 	{
 		if(isset($this->_attributes['id']))
 			return $this->_attributes['id'];
-			
+
 		return null;
 	}
 
@@ -596,7 +596,7 @@ class Element
 	{
 		if(isset($this->_attributes['class']))
 			return $this->_attributes['class'];
-			
+
 	}
 
 	public function getAttributes()
