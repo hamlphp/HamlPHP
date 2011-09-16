@@ -107,7 +107,6 @@ class TagNode extends HamlNode
     $compiler = $this->getCompiler();
     $nextLine = $compiler->getLine($this->getLineNumber() + $this->getChildrenCount() + 1);
     $nextLineTag = null;
-    echo $this->getChildrenCount() . "\n";
 
     if ($nextLine !== null && $this->isTag($nextLine)) {
       $nextLineTag = new TagNode($nextLine);
