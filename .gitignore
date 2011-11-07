@@ -2,5 +2,7 @@
 .project
 .settings
 tmp/*
+*/tmp/*
 index.haml
 test.php
+.DS_Store
