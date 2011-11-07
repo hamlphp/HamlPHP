@@ -12,5 +12,5 @@ interface ContentEvaluator
    * @param $id An identifier of the content. Could be a filename.
    * @return string
    */
-  public function evaluate($content, array $contentVariables = array(), $id = null);
+  public function evaluate($content, array &$contentVariables = array(), $id = null);
 }

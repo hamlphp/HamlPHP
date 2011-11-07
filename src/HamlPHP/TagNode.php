@@ -17,11 +17,14 @@ class TagNode extends HamlNode
     'else' => 'endif',
     'while' => 'endwhile',
     'foreach' => 'endforeach',
+    'content_for' => 'EOT',
   );
 
   private $_line = null;
   
   private $_isTag = false;
+  
+  private $_contentFor = false;
   
   /**
    * Can be either TagNode::SILENT_MODE or TagNode::LOUD_MODE
@@ -57,13 +60,22 @@ class TagNode extends HamlNode
     $this->_mode = $matches['mode'];
     $this->_code = $matches['code'];
     
+    if(substr($this->_code, 0, 11) == 'content_for'){
+      $this->_code = trim(str_replace('content_for ','',$this->_code));
+    }
+    
     if (isset($matches['tag'])) {
       $tag = trim($matches['tag']);
+      
+      if(substr($tag, 0, 11) == 'content_for'){
+        $this->_contentFor = true;
+        $tag = substr($tag, 0, 11);
+      }
 
       if (isset($this->_tags[$tag])) {
         $this->_isTag = true;
         $this->_tag = $tag;
-        if (!isset($matches['colon']))
+        if (!isset($matches['colon']) && !$this->_contentFor)
           $this->_code .= ':';
 	    }
     }
@@ -101,7 +113,11 @@ class TagNode extends HamlNode
 
   private function generateTagContent()
   {
-    $content = $this->getSpaces() . "<?php " . $this->_code . " ?>\n";
+    if($this->_contentFor){
+      $content = $this->getSpaces() . "<?php " . $this->_code . " = <<< " . $this->_tags[$this->_tag] . "\n";
+    } else {
+      $content = $this->getSpaces() . "<?php " . $this->_code . " ?>\n";
+    }
     $content .= $this->renderChildren();
 
     $compiler = $this->getCompiler();
@@ -115,7 +131,11 @@ class TagNode extends HamlNode
     if (!($nextLineTag !== null
         && strtolower($nextLineTag->getTagName()) !== 'if'
         && strlen($nextLineTag->getSpaces()) == strlen($this->getSpaces()))) {
-      $content .= $this->getSpaces() . "<?php " . $this->_tags[$this->_tag] . "; ?>";
+      if($this->_contentFor){
+        $content .= $this->getSpaces() . "\n" . $this->_tags[$this->_tag] . "\n?>";
+      } else {
+        $content .= $this->getSpaces() . "<?php " . $this->_tags[$this->_tag] . "; ?>";
+      }
     } else {
       $content = rtrim($content);
     }

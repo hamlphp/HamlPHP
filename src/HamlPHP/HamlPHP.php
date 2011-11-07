@@ -152,7 +152,7 @@ class HamlPHP
    *
    * @param string $fileName
    */
-  public function parseFile($fileName, array $templateVars = array())
+  public function parseFile($fileName, array &$templateVars = array())
   {
     $content = $this->getContentFromStorage($fileName);
 

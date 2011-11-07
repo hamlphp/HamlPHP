@@ -1,0 +1,8 @@
+%ul.products 
+  %li= 1 * 6
+  - for ($i = 0; $i < 10; $i++)
+    %li= $i + 3
+    
+- content_for $footer
+  %p
+    Products page footer
