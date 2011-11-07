@@ -8,6 +8,8 @@ PHP 5.2 or newer.
 
 ## Usage
 
+Check the examples directory.
+
 index.haml
 
     !!! 5
