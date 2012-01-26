@@ -115,13 +115,17 @@ class ElementNode extends HamlNode
 			}
 		}
 		
-		$content = $this->renderTagContent($element->getInlineContent());
-		
 		$interpolation = new Interpolation($output);
 		$output = $interpolation->render();
-		
-		// render inline content
-		$output .= '>' . $content . '</' . $element->getTag() . '>';
+                
+                if ($this->_el->isSelfClosing()) {
+                    $output .= ' />';
+                } else {
+                    // render inline content
+                    $content = $this->renderTagContent($element->getInlineContent());
+                    $output .= '>' . $content . '</' . $element->getTag() . '>';
+                }
+                
 		return $output . "\n";
 	}
 

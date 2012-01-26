@@ -613,6 +613,10 @@ class Element
 	{
 		return $this->_useAttsHelper;
 	}
+        
+        public function isSelfClosing() {
+                return $this->_selfClosing;
+        }
 }
 
 ?>
