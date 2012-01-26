@@ -11,7 +11,7 @@ class FileStorage implements Storage, ContentEvaluator
     $this->_extension = $extension;
   }
 
-  public function evaluate($content, array $contentVariables = array(), $id = null)
+  public function evaluate($content, array &$contentVariables = array(), $id = null)
   {
     if (null === $id) {
       throw new Exception("FileStorage: Could not evaluate. ID is null.");
@@ -20,6 +20,11 @@ class FileStorage implements Storage, ContentEvaluator
     ob_start();
     extract($contentVariables);
     require $this->_path . $id . $this->_extension;
+    foreach($contentVariables as $key => $value){
+      if(empty($value) && !empty($$key)){
+        $contentVariables[$key] = $$key;
+      }
+    }
     $result = ob_get_clean();
 
     return $result;

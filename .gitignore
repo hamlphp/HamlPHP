@@ -1,6 +1,9 @@
 .buildpath
 .project
 .settings
+*.cached.php
 tmp/*
+*tmp/*
 index.haml
 test.php
+.DS_Store

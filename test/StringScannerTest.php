@@ -2,7 +2,7 @@
 
 require_once 'test_helper.php';
 
-require_once HAMLPHP_DIR_SRC . "/util/StringScanner.php";
+require_once HAMLPHP_DIR_SRC . "/Util/StringScanner.php";
 
 class StringScannerTest extends PHPUnit_Framework_TestCase
 {
