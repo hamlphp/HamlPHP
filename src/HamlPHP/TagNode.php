@@ -98,6 +98,10 @@ class TagNode extends HamlNode
 
     return false;
   }
+  
+  public function isLoud() {
+      return TagNode::LOUD_MODE == $this->_mode;
+  }
 
   private function generateTagContent()
   {
@@ -114,7 +118,8 @@ class TagNode extends HamlNode
 
     if (!($nextLineTag !== null
         && strtolower($nextLineTag->getTagName()) !== 'if'
-        && strlen($nextLineTag->getSpaces()) == strlen($this->getSpaces()))) {
+        && strlen($nextLineTag->getSpaces()) == strlen($this->getSpaces())
+        && !$nextLineTag->isLoud())) {
       $content .= $this->getSpaces() . "<?php " . $this->_tags[$this->_tag] . "; ?>";
     } else {
       $content = rtrim($content);
