@@ -4,6 +4,7 @@ class FileStorage implements Storage, ContentEvaluator
 {
   protected $_path = null;
   protected $_extension = null;
+  protected $_requirePath = null;
 
   public function __construct($cachePath, $extension = '.cached.php')
   {
@@ -16,10 +17,12 @@ class FileStorage implements Storage, ContentEvaluator
     if (null === $id) {
       throw new Exception("FileStorage: Could not evaluate. ID is null.");
     }
-
+    
+    $this->requirePath = $this->_path . $id . $this->_extension;
+    
     ob_start();
     extract($contentVariables);
-    require $this->_path . $id . $this->_extension;
+    require $this->requirePath;
     $result = ob_get_clean();
 
     return $result;
