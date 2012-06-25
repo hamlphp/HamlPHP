@@ -9,7 +9,7 @@ class InterpolationTest extends PHPUnit_Framework_TestCase
 
   public function __construct()
   {
-    $this->compiler = new Compiler();
+    $this->compiler = getTestCompiler();
   }
 
   public function testInterpolation()

@@ -77,6 +77,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_0x24"><span>$</span></a></li>
       <li><a href="#index__"><span>_</span></a></li>
       <li><a href="#index_a"><span>a</span></a></li>
+      <li><a href="#index_b"><span>b</span></a></li>
       <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_d"><span>d</span></a></li>
       <li><a href="#index_e"><span>e</span></a></li>
@@ -148,22 +149,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>__construct()
 : <a class="el" href="class_comment_node.html#a74c269e79e38788c9b298f95a56b38bb">CommentNode</a>
 , <a class="el" href="class_compiler.html#a23e31157211b60258fad8e4cb26380d5">Compiler</a>
-, <a class="el" href="class_element.html#a74c269e79e38788c9b298f95a56b38bb">Element</a>
+, <a class="el" href="class_element.html#a50a665e9bd3d484a2bc376cc0b1f9b51">Element</a>
 , <a class="el" href="class_haml_node.html#a74c269e79e38788c9b298f95a56b38bb">HamlNode</a>
 , <a class="el" href="class_undefined_property_exception.html#a94a77c353cb3f6ec582462392931ea3e">UndefinedPropertyException</a>
 , <a class="el" href="class_read_only_property_exception.html#a94a77c353cb3f6ec582462392931ea3e">ReadOnlyPropertyException</a>
 , <a class="el" href="class_haml_p_h_p.html#a41adfec6ccd408d088ed19bb4ee84471">HamlPHP</a>
-, <a class="el" href="class_string_scanner.html#adfbb717507cfdff51e565e468b5be13e">StringScanner</a>
-, <a class="el" href="class_base_exception.html#a8944200778723861487ba785d31da37f">BaseException</a>
-, <a class="el" href="class_tag_node.html#a74c269e79e38788c9b298f95a56b38bb">TagNode</a>
-, <a class="el" href="class_invalid_tag_exception.html#a4047ef666daed5357392d90dce656d91">InvalidTagException</a>
-, <a class="el" href="class_file_storage.html#a01ecd598644ff9896a445c919aeff7af">FileStorage</a>
-, <a class="el" href="class_root_node.html#a095c5d389db211932136b53f25f39685">RootNode</a>
-, <a class="el" href="class_element_node.html#a74c269e79e38788c9b298f95a56b38bb">ElementNode</a>
+, <a class="el" href="class_string_scanner.html#a827fe9bf61cdbddc76d68bfaa88ba2c0">StringScanner</a>
+, <a class="el" href="class_element_node.html#a16acfa59ca173a305816d43598e4d7d4">ElementNode</a>
 , <a class="el" href="class_interpolation.html#a29f6e9abaa4fb1c43e6a790fbe681bb9">Interpolation</a>
+, <a class="el" href="class_root_node.html#a095c5d389db211932136b53f25f39685">RootNode</a>
 , <a class="el" href="class_doctype_node.html#a74c269e79e38788c9b298f95a56b38bb">DoctypeNode</a>
-, <a class="el" href="class_filter_node.html#a684176f2108b6d16c2d2013ed65d3cb1">FilterNode</a>
 , <a class="el" href="class_filter_container.html#a4821f033c4fe016ba44abdb9a538e1e1">FilterContainer</a>
+, <a class="el" href="class_file_storage.html#a01ecd598644ff9896a445c919aeff7af">FileStorage</a>
+, <a class="el" href="class_invalid_tag_exception.html#a4047ef666daed5357392d90dce656d91">InvalidTagException</a>
+, <a class="el" href="class_filter_node.html#a684176f2108b6d16c2d2013ed65d3cb1">FilterNode</a>
+, <a class="el" href="class_tag_node.html#a74c269e79e38788c9b298f95a56b38bb">TagNode</a>
+, <a class="el" href="class_base_exception.html#a8944200778723861487ba785d31da37f">BaseException</a>
 </li>
 <li>__get()
 : <a class="el" href="class_base_object.html#abc8e9e31bb15c8a44c3210ec551407c8">BaseObject</a>
@@ -171,11 +172,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>__set()
 : <a class="el" href="class_base_object.html#a83c2703c91959192f759992ad5640b67">BaseObject</a>
 </li>
-<li>_getEos()
-: <a class="el" href="class_string_scanner.html#a05d9b3d10537ebd12d3fff468c495281">StringScanner</a>
+<li>_clear_matched()
+: <a class="el" href="class_string_scanner.html#a3150bf1435f710b13d408f42a948bfc8">StringScanner</a>
+</li>
+<li>_containsPhpAttribute()
+: <a class="el" href="class_element.html#aa485834e479b5a289fed032aa05168a9">Element</a>
+</li>
+<li>_interpolate()
+: <a class="el" href="class_element.html#a90359fff196f30e250b567806bbb612d">Element</a>
 </li>
 <li>_matched()
 : <a class="el" href="class_string_scanner.html#a574a3aaa94411d8953f2ce5f3f53a7fb">StringScanner</a>
+</li>
+<li>_mergeAttributes()
+: <a class="el" href="class_element.html#adcb937c805b37d61d2b9357e66b0d26f">Element</a>
+</li>
+<li>_parseClassAndId()
+: <a class="el" href="class_element.html#aa00f1e727c26aedafc5fe87963254c90">Element</a>
+</li>
+<li>_parseHashAttrs()
+: <a class="el" href="class_element.html#a8b0a80bc6c57a65df0d1269c6ca78a85">Element</a>
+</li>
+<li>_parseHtmlAttrs()
+: <a class="el" href="class_element.html#a210eef96f90ac0d818eeab1a976bdc6d">Element</a>
+</li>
+<li>_parseObjRef()
+: <a class="el" href="class_element.html#a2e8f63eb45859552d74f02848e9fa461">Element</a>
+</li>
+<li>_renderArrayValue()
+: <a class="el" href="class_element_node.html#a53487bf10d5c6c82f8b9ed8fc11edf3b">ElementNode</a>
+</li>
+<li>_string_updated()
+: <a class="el" href="class_string_scanner.html#a86323b8343a0c959c0444d0918b5b924">StringScanner</a>
 </li>
 </ul>
 
@@ -186,6 +214,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>addNode()
 : <a class="el" href="class_root_node.html#a4b862591f24db62915a2eab9f45d998c">RootNode</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
+<li>balance()
+: <a class="el" href="class_element.html#a588be32d50c025ca91281da39e14e374">Element</a>
 </li>
 </ul>
 
@@ -205,7 +240,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="class_string_scanner.html#a485d770eedc6783ec5aeabbbe073a237">StringScanner</a>
 </li>
 <li>createNode()
-: <a class="el" href="class_node_factory.html#a6a60950659e5a0825aee8ff02baf792a">NodeFactory</a>
+: <a class="el" href="class_node_factory.html#a53bcb9918379b1c3edf1c84d92a3439a">NodeFactory</a>
 </li>
 <li>createSpaces()
 : <a class="el" href="class_haml_node.html#ae26db363e55f5049d55b002c258601ad">HamlNode</a>
@@ -224,13 +259,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>enableCache()
 : <a class="el" href="class_config.html#a5308f7e4675be1870e1de9f1356504a1">Config</a>
 </li>
-<li>eos()
-: <a class="el" href="class_string_scanner.html#a0a44b1bda82ffb7e69e9da1745a168a6">StringScanner</a>
-</li>
 <li>evaluate()
-: <a class="el" href="class_file_storage.html#a012ae8d53814646afba3a961f3d5c96a">FileStorage</a>
+: <a class="el" href="interface_content_evaluator.html#a012ae8d53814646afba3a961f3d5c96a">ContentEvaluator</a>
+, <a class="el" href="class_file_storage.html#a012ae8d53814646afba3a961f3d5c96a">FileStorage</a>
 , <a class="el" href="class_default_content_evaluator.html#a012ae8d53814646afba3a961f3d5c96a">DefaultContentEvaluator</a>
-, <a class="el" href="interface_content_evaluator.html#a012ae8d53814646afba3a961f3d5c96a">ContentEvaluator</a>
 </li>
 <li>exist()
 : <a class="el" href="class_string_scanner.html#a1138f5d8fc31f60a16e442ee3d5bf268">StringScanner</a>
@@ -244,7 +276,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="interface_storage.html#aca60d7c39a5e48edd6ff6ee153a803a2">Storage</a>
 </li>
 <li>filter()
-: <a class="el" href="interface_filter.html#a962e7af53efc7b574ed8a442505bc4a2">Filter</a>
+: <a class="el" href="class_php_filter.html#a962e7af53efc7b574ed8a442505bc4a2">PhpFilter</a>
+, <a class="el" href="class_javascript_filter.html#a962e7af53efc7b574ed8a442505bc4a2">JavascriptFilter</a>
+, <a class="el" href="interface_filter.html#a962e7af53efc7b574ed8a442505bc4a2">Filter</a>
 , <a class="el" href="class_css_filter.html#a962e7af53efc7b574ed8a442505bc4a2">CssFilter</a>
 , <a class="el" href="class_plain_filter.html#a962e7af53efc7b574ed8a442505bc4a2">PlainFilter</a>
 </li>
@@ -313,9 +347,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="class_element.html#a12251d0c022e9e21c137a105ff683f13">Element</a>
 </li>
 <li>getIdentifier()
-: <a class="el" href="class_plain_filter.html#a6da3f4f9718ce7343730b457b255b477">PlainFilter</a>
-, <a class="el" href="class_css_filter.html#a6da3f4f9718ce7343730b457b255b477">CssFilter</a>
+: <a class="el" href="class_css_filter.html#a6da3f4f9718ce7343730b457b255b477">CssFilter</a>
 , <a class="el" href="interface_filter.html#a6da3f4f9718ce7343730b457b255b477">Filter</a>
+, <a class="el" href="class_javascript_filter.html#a6da3f4f9718ce7343730b457b255b477">JavascriptFilter</a>
+, <a class="el" href="class_php_filter.html#a6da3f4f9718ce7343730b457b255b477">PhpFilter</a>
+, <a class="el" href="class_plain_filter.html#a6da3f4f9718ce7343730b457b255b477">PlainFilter</a>
 </li>
 <li>getIndentationLevel()
 : <a class="el" href="class_root_node.html#a39593ab50d7dd0fdb0c06a712fadf1cc">RootNode</a>
@@ -329,6 +365,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>getMatchedSize()
 : <a class="el" href="class_string_scanner.html#a67f4ddc557094a0b16522920f4158c6e">StringScanner</a>
 </li>
+<li>getNextLine()
+: <a class="el" href="class_compiler.html#af6a6e7e25eb2931a70c4eaa4f3d4e12f">Compiler</a>
+</li>
 <li>getOrigMsg()
 : <a class="el" href="class_base_exception.html#a86a8fdc0ff2e0f9df428371f8a048b23">BaseException</a>
 </li>
@@ -337,6 +376,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>getPos()
 : <a class="el" href="class_string_scanner.html#a43d77d82832dbc67ef4bb57a0988e246">StringScanner</a>
+</li>
+<li>getPostMatch()
+: <a class="el" href="class_string_scanner.html#a9e5783ad39e1ec44cde7ded977619d0c">StringScanner</a>
+</li>
+<li>getPreMatch()
+: <a class="el" href="class_string_scanner.html#ab5f8d54659cc43e3f9a0fea93b0ece10">StringScanner</a>
 </li>
 <li>getRawHaml()
 : <a class="el" href="class_haml_node.html#a35f3d485ebf160b8bb13ac9a807055b6">HamlNode</a>
@@ -369,9 +414,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>hasParent()
 : <a class="el" href="class_root_node.html#af777a5920aced0a4e1678d9ab65f35f7">RootNode</a>
 </li>
-<li>hasRest()
-: <a class="el" href="class_string_scanner.html#a1062c7a174ee23fe15a56198b6ce493d">StringScanner</a>
-</li>
 </ul>
 
 
@@ -391,9 +433,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>isCacheEnabled()
 : <a class="el" href="class_config.html#a7766ee0d6714c62177235a609f4d40be">Config</a>
 </li>
+<li>isEos()
+: <a class="el" href="class_string_scanner.html#a9b17a4f7163f56cfdc8573168d4e845b">StringScanner</a>
+</li>
 <li>isFresh()
-: <a class="el" href="class_file_storage.html#afded13d03b107f05961cc90442bb5282">FileStorage</a>
-, <a class="el" href="interface_storage.html#afded13d03b107f05961cc90442bb5282">Storage</a>
+: <a class="el" href="interface_storage.html#afded13d03b107f05961cc90442bb5282">Storage</a>
+, <a class="el" href="class_file_storage.html#afded13d03b107f05961cc90442bb5282">FileStorage</a>
 </li>
 <li>isPhpVariable()
 : <a class="el" href="class_element.html#a0ec82e126c3ab3302c2988bcdebd923f">Element</a>
@@ -428,27 +473,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
-<li>parseAttributes()
-: <a class="el" href="class_element.html#a09c6b12fa11c16a3562f0797a49536e8">Element</a>
-</li>
-<li>parseClasses()
-: <a class="el" href="class_element.html#a46fa75e8817bad2ba49e5561f59b5544">Element</a>
-</li>
 <li>parseFile()
-: <a class="el" href="class_haml_p_h_p.html#af0739366721f92d97cba9828560c76eb">HamlPHP</a>
-, <a class="el" href="class_compiler.html#a318ee6d594b10b1125eb395ec5f4ccd8">Compiler</a>
+: <a class="el" href="class_compiler.html#a318ee6d594b10b1125eb395ec5f4ccd8">Compiler</a>
+, <a class="el" href="class_haml_p_h_p.html#af0739366721f92d97cba9828560c76eb">HamlPHP</a>
 </li>
 <li>parseHaml()
 : <a class="el" href="class_element.html#a5f76ba5b41e984a2e4f3602cd584933a">Element</a>
-</li>
-<li>parseHashAttrs()
-: <a class="el" href="class_element.html#ad868677655a4ce8db6b518e21a2f6e8f">Element</a>
-</li>
-<li>parseHtmlAttrs()
-: <a class="el" href="class_element.html#a96e03fdb98645fc75e11ead46621b3b1">Element</a>
-</li>
-<li>parseId()
-: <a class="el" href="class_element.html#a87da5debe66fcd5d64f855022ca9ed5b">Element</a>
 </li>
 <li>parseLines()
 : <a class="el" href="class_compiler.html#acfc137524d4254a5281bb9a1b68b9b7f">Compiler</a>
@@ -459,12 +489,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>peek()
 : <a class="el" href="class_string_scanner.html#aa8bd3fef4702518ae02fe5fbb94e5011">StringScanner</a>
 </li>
-<li>postMatch()
-: <a class="el" href="class_string_scanner.html#adbc504afdbabcb4c882ee5fa29dd29a7">StringScanner</a>
-</li>
-<li>preMatch()
-: <a class="el" href="class_string_scanner.html#ab3b4e801b3f3085e84ee4983828b86a2">StringScanner</a>
-</li>
 </ul>
 
 
@@ -473,18 +497,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="class_file_storage.html#a11f0aa9afc724ac4074e3ca127e79a2a">FileStorage</a>
 , <a class="el" href="interface_storage.html#a11f0aa9afc724ac4074e3ca127e79a2a">Storage</a>
 </li>
-<li>removeQuotes()
-: <a class="el" href="class_element.html#a97d2b910c9fe57fbfeabf05d8caa9b6f">Element</a>
-</li>
 <li>render()
-: <a class="el" href="class_comment_node.html#afde88292c44dc59faf017738dae6dffb">CommentNode</a>
-, <a class="el" href="class_haml_node.html#afde88292c44dc59faf017738dae6dffb">HamlNode</a>
+: <a class="el" href="class_doctype_node.html#afde88292c44dc59faf017738dae6dffb">DoctypeNode</a>
 , <a class="el" href="class_interpolation.html#afde88292c44dc59faf017738dae6dffb">Interpolation</a>
-, <a class="el" href="class_doctype_node.html#afde88292c44dc59faf017738dae6dffb">DoctypeNode</a>
 , <a class="el" href="class_root_node.html#afde88292c44dc59faf017738dae6dffb">RootNode</a>
-, <a class="el" href="class_tag_node.html#afde88292c44dc59faf017738dae6dffb">TagNode</a>
 , <a class="el" href="class_element_node.html#afde88292c44dc59faf017738dae6dffb">ElementNode</a>
+, <a class="el" href="class_tag_node.html#afde88292c44dc59faf017738dae6dffb">TagNode</a>
+, <a class="el" href="class_comment_node.html#afde88292c44dc59faf017738dae6dffb">CommentNode</a>
 , <a class="el" href="class_filter_node.html#afde88292c44dc59faf017738dae6dffb">FilterNode</a>
+, <a class="el" href="class_haml_node.html#afde88292c44dc59faf017738dae6dffb">HamlNode</a>
 </li>
 <li>renderChildren()
 : <a class="el" href="class_root_node.html#a62f59b55472c0c09d50b51a62f97db31">RootNode</a>
@@ -619,12 +640,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>updateMessage()
 : <a class="el" href="class_base_exception.html#ac08241eeea22007799f6a52e7b094158">BaseException</a>
 </li>
+<li>useAttsHelper()
+: <a class="el" href="class_element.html#a40f6a92f695703a0a19a1d7099e2c3ae">Element</a>
+</li>
 </ul>
 </div>
 </div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="footer">Generated on Sun Mar 20 2011 22:24:55 for HamlPHP by&#160;
+      <li class="footer">Generated on Mon Mar 28 2011 05:20:09 for HamlPHP by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </li>
     </ul>

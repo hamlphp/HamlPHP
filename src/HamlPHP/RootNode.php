@@ -6,12 +6,15 @@ class RootNode
   private $_indentation;
   private $_childrenCount;
   private $_parent;
+  private $_compiler;
+  private $_lineNumber;
 
   public function __construct()
   {
     $this->_children = array();
     $this->_indentation = -1;
     $this->_childrenCount = 0;
+    $this->_lineNumber = 0;
     $this->_parent = null;
   }
 
@@ -28,6 +31,26 @@ class RootNode
   public function hasParent()
   {
     return $this->_parent !== null;
+  }
+
+  public function setLineNumber($lineNumber)
+  {
+    $this->_lineNumber = $lineNumber;
+  }
+
+  public function getLineNumber()
+  {
+    return $this->_lineNumber;
+  }
+
+  public function setCompiler(Compiler $compiler)
+  {
+    $this->_compiler = $compiler;
+  }
+
+  public function getCompiler()
+  {
+    return $this->_compiler;
   }
 
   public function setIndentationLevel($level)
@@ -76,6 +99,11 @@ class RootNode
     return $this->_children;
   }
 
+  public function getChildrenCount()
+  {
+    return $this->_childrenCount;
+  }
+
   public function hasChildren()
   {
     return $this->_childrenCount > 0;
@@ -86,7 +114,8 @@ class RootNode
     $output = '';
 
     for ($i = 0; $i < $this->_childrenCount; ++$i) {
-      $output .= $this->_children[$i]->render();
+      $res = $this->_children[$i]->render();
+      $output .= $res;
     }
 
     return $output;

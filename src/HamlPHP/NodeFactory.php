@@ -29,8 +29,7 @@ class NodeFactory
     $this->_filterContainer = $container;
   }
 
-  public function createNode($line)
-  {
+  protected function getNodeObject($line, Compiler $compiler) {
     $strippedLine = trim($line);
 
     if($strippedLine == '')
@@ -56,7 +55,7 @@ class NodeFactory
     );
 
     if (in_array($strippedLine[0], $elements)) {
-      return new ElementNode($line);
+      return new ElementNode($line, $compiler);
     }
 
     if ($strippedLine[0] === NodeFactory::TAG
@@ -65,5 +64,17 @@ class NodeFactory
     }
 
     return new HamlNode($line);
+  }
+
+  public function createNode($line, $lineNumber, Compiler $compiler)
+  {
+    $node = $this->getNodeObject($line, $compiler);
+
+    if ($node !== null) {
+      $node->setLineNumber($lineNumber);
+      $node->setCompiler($compiler);
+    }
+
+    return $node;
   }
 }

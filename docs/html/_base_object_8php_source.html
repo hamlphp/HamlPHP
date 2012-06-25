@@ -60,6 +60,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div>
@@ -112,51 +113,50 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00054"></a>00054                 <span class="keywordflow">foreach</span>($methods as $m)
 <a name="l00055"></a>00055                 {
 <a name="l00056"></a>00056                         <span class="keywordflow">if</span>(method_exists($this, $m)) {
-<a name="l00057"></a>00057                                 echo <span class="stringliteral">&quot;calling $m by $name\n&quot;</span>;
-<a name="l00058"></a>00058                                 <span class="keywordflow">return</span> $this-&gt;$m();
-<a name="l00059"></a>00059                         }
-<a name="l00060"></a>00060                 }
-<a name="l00061"></a>00061                 
-<a name="l00062"></a>00062                 $ex = <span class="keyword">new</span> <a class="code" href="class_undefined_property_exception.html">UndefinedPropertyException</a>(get_class($this), $name);
-<a name="l00063"></a>00063                 $btrace = debug_backtrace();
-<a name="l00064"></a>00064                 $ex-&gt;setGuiltyFile($btrace[0][<span class="stringliteral">&#39;file&#39;</span>]);
-<a name="l00065"></a>00065                 $ex-&gt;setGuiltyLine($btrace[0][<span class="stringliteral">&#39;line&#39;</span>]);
-<a name="l00066"></a>00066                 <span class="keywordflow">throw</span> $ex;
-<a name="l00067"></a>00067         }
-<a name="l00068"></a>00068 
-<a name="l00069"></a><a class="code" href="class_base_object.html#a83c2703c91959192f759992ad5640b67">00069</a>         <span class="keyword">public</span> function <a class="code" href="class_base_object.html#a83c2703c91959192f759992ad5640b67">__set</a>($name,$value)
-<a name="l00070"></a>00070         {
-<a name="l00071"></a>00071                 $setter=<span class="stringliteral">&#39;set&#39;</span>.$name;
-<a name="l00072"></a>00072                 $boolSetter = <span class="stringliteral">&quot;is$name&quot;</span>;
-<a name="l00073"></a>00073                 
-<a name="l00074"></a>00074                 <span class="keywordflow">if</span>(method_exists($this,$setter))
-<a name="l00075"></a>00075                 {
-<a name="l00076"></a>00076                         $this-&gt;$setter($value);
-<a name="l00077"></a>00077                 }
-<a name="l00078"></a>00078                 <span class="keywordflow">else</span> <span class="keywordflow">if</span>(method_exists($this,<span class="stringliteral">&#39;get&#39;</span>.$name))
-<a name="l00079"></a>00079                 {
-<a name="l00080"></a>00080                         $ex = <span class="keyword">new</span> <a class="code" href="class_read_only_property_exception.html">ReadOnlyPropertyException</a>(get_class($this), $name);
-<a name="l00081"></a>00081                         $btrace = debug_backtrace();
-<a name="l00082"></a>00082                         $ex-&gt;setGuiltyFile($btrace[0][<span class="stringliteral">&#39;file&#39;</span>]);
-<a name="l00083"></a>00083                         $ex-&gt;setGuiltyLine($btrace[0][<span class="stringliteral">&#39;line&#39;</span>]);
-<a name="l00084"></a>00084                         <span class="keywordflow">throw</span> $ex;
-<a name="l00085"></a>00085                 }
-<a name="l00086"></a>00086                 <span class="keywordflow">else</span>
-<a name="l00087"></a>00087                 {
-<a name="l00088"></a>00088                         $ex = <span class="keyword">new</span> <a class="code" href="class_undefined_property_exception.html">UndefinedPropertyException</a>(get_class($this), $name);
-<a name="l00089"></a>00089                         $btrace = debug_backtrace();
-<a name="l00090"></a>00090                         $ex-&gt;setGuiltyFile($btrace[0][<span class="stringliteral">&#39;file&#39;</span>]);
-<a name="l00091"></a>00091                         $ex-&gt;setGuiltyLine($btrace[0][<span class="stringliteral">&#39;line&#39;</span>]);
-<a name="l00092"></a>00092                         <span class="keywordflow">throw</span> $ex;
-<a name="l00093"></a>00093                 }
-<a name="l00094"></a>00094         }
-<a name="l00095"></a>00095 }
+<a name="l00057"></a>00057                                 <span class="keywordflow">return</span> $this-&gt;$m();
+<a name="l00058"></a>00058                         }
+<a name="l00059"></a>00059                 }
+<a name="l00060"></a>00060                 
+<a name="l00061"></a>00061                 $ex = <span class="keyword">new</span> <a class="code" href="class_undefined_property_exception.html">UndefinedPropertyException</a>(get_class($this), $name);
+<a name="l00062"></a>00062                 $btrace = debug_backtrace();
+<a name="l00063"></a>00063                 $ex-&gt;setGuiltyFile($btrace[0][<span class="stringliteral">&#39;file&#39;</span>]);
+<a name="l00064"></a>00064                 $ex-&gt;setGuiltyLine($btrace[0][<span class="stringliteral">&#39;line&#39;</span>]);
+<a name="l00065"></a>00065                 <span class="keywordflow">throw</span> $ex;
+<a name="l00066"></a>00066         }
+<a name="l00067"></a>00067 
+<a name="l00068"></a><a class="code" href="class_base_object.html#a83c2703c91959192f759992ad5640b67">00068</a>         <span class="keyword">public</span> function <a class="code" href="class_base_object.html#a83c2703c91959192f759992ad5640b67">__set</a>($name,$value)
+<a name="l00069"></a>00069         {
+<a name="l00070"></a>00070                 $setter=<span class="stringliteral">&#39;set&#39;</span>.$name;
+<a name="l00071"></a>00071                 $boolSetter = <span class="stringliteral">&quot;is$name&quot;</span>;
+<a name="l00072"></a>00072                 
+<a name="l00073"></a>00073                 <span class="keywordflow">if</span>(method_exists($this,$setter))
+<a name="l00074"></a>00074                 {
+<a name="l00075"></a>00075                         $this-&gt;$setter($value);
+<a name="l00076"></a>00076                 }
+<a name="l00077"></a>00077                 <span class="keywordflow">else</span> <span class="keywordflow">if</span>(method_exists($this,<span class="stringliteral">&#39;get&#39;</span>.$name))
+<a name="l00078"></a>00078                 {
+<a name="l00079"></a>00079                         $ex = <span class="keyword">new</span> <a class="code" href="class_read_only_property_exception.html">ReadOnlyPropertyException</a>(get_class($this), $name);
+<a name="l00080"></a>00080                         $btrace = debug_backtrace();
+<a name="l00081"></a>00081                         $ex-&gt;setGuiltyFile($btrace[0][<span class="stringliteral">&#39;file&#39;</span>]);
+<a name="l00082"></a>00082                         $ex-&gt;setGuiltyLine($btrace[0][<span class="stringliteral">&#39;line&#39;</span>]);
+<a name="l00083"></a>00083                         <span class="keywordflow">throw</span> $ex;
+<a name="l00084"></a>00084                 }
+<a name="l00085"></a>00085                 <span class="keywordflow">else</span>
+<a name="l00086"></a>00086                 {
+<a name="l00087"></a>00087                         $ex = <span class="keyword">new</span> <a class="code" href="class_undefined_property_exception.html">UndefinedPropertyException</a>(get_class($this), $name);
+<a name="l00088"></a>00088                         $btrace = debug_backtrace();
+<a name="l00089"></a>00089                         $ex-&gt;setGuiltyFile($btrace[0][<span class="stringliteral">&#39;file&#39;</span>]);
+<a name="l00090"></a>00090                         $ex-&gt;setGuiltyLine($btrace[0][<span class="stringliteral">&#39;line&#39;</span>]);
+<a name="l00091"></a>00091                         <span class="keywordflow">throw</span> $ex;
+<a name="l00092"></a>00092                 }
+<a name="l00093"></a>00093         }
+<a name="l00094"></a>00094 }
 </pre></div></div>
 </div>
   <div id="nav-path" class="navpath">
     <ul>
       <li class="navelem"><a class="el" href="_base_object_8php.html">BaseObject.php</a>      </li>
-      <li class="footer">Generated on Sun Mar 20 2011 22:24:55 for HamlPHP by&#160;
+      <li class="footer">Generated on Mon Mar 28 2011 05:20:09 for HamlPHP by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </li>
     </ul>

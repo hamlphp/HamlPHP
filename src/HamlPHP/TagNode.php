@@ -13,6 +13,8 @@ class TagNode extends HamlNode
   private $_tags = array(
     'for' => 'endfor',
     'if' => 'endif',
+    'else if' => 'endif',
+    'else' => 'endif',
     'while' => 'endwhile',
     'foreach' => 'endforeach',
   );
@@ -39,7 +41,7 @@ class TagNode extends HamlNode
    */
   private $_code;
 
-  const CODE_PATTERN = '/(?P<mode>[-=])\s*(?P<code>(?P<tag>\w+)\s*([^\:]+)(?P<colon>:)?\s*$|[^\r\n]+)/';
+  const CODE_PATTERN = '/(?P<mode>[-=])\s*(?P<code>(?P<tag>[^\:\(\)]+)\s*(\(.+\))?(?P<colon>:)?\s*$|[^\r\n]+)/';
   const SILENT_MODE = '-';
   const LOUD_MODE = '=';
   
@@ -55,13 +57,17 @@ class TagNode extends HamlNode
     $this->_mode = $matches['mode'];
     $this->_code = $matches['code'];
     
-    if(isset($matches['tag']) && isset($this->_tags[$matches['tag']])) {
-    	$this->_isTag = true;
-    	$this->_tag = $matches['tag'];
-    	if(!isset($matches['colon']))
-	    	$this->_code .= ':';
+    if (isset($matches['tag'])) {
+      $tag = trim($matches['tag']);
+
+      if (isset($this->_tags[$tag])) {
+        $this->_isTag = true;
+        $this->_tag = $tag;
+        if (!isset($matches['colon']))
+          $this->_code .= ':';
+	    }
     }
-    
+
     if($this->_isTag && TagNode::LOUD_MODE == $this->_mode)
     	throw new InvalidTagException('Loud mode is not allowed for the tags '.join(', ', array_keys($this->_tags)).
     		'. Use silent mode (-).');
@@ -79,12 +85,46 @@ class TagNode extends HamlNode
     return $this->getSpaces() . "<?php $mode{$this->_code} ?>\n";
   }
 
+  public function getTagName()
+  {
+    return $this->_tag;
+  }
+
+  private function isTag($line)
+  {
+    if (preg_match(TagNode::CODE_PATTERN, $line, $matches)) {
+      return true;
+    }
+
+    return false;
+  }
+  
+  public function isLoud() {
+      return TagNode::LOUD_MODE == $this->_mode;
+  }
+
   private function generateTagContent()
   {
     $content = $this->getSpaces() . "<?php " . $this->_code . " ?>\n";
     $content .= $this->renderChildren();
-    $content .= $this->getSpaces() . "<?php " . $this->_tags[$this->_tag] . "; ?>";
-    
+
+    $compiler = $this->getCompiler();
+    $nextLine = $compiler->getLine($this->getLineNumber() + $this->getChildrenCount() + 1);
+    $nextLineTag = null;
+
+    if ($nextLine !== null && $this->isTag($nextLine)) {
+      $nextLineTag = new TagNode($nextLine);
+    }
+
+    if (!($nextLineTag !== null
+        && strtolower($nextLineTag->getTagName()) !== 'if'
+        && strlen($nextLineTag->getSpaces()) == strlen($this->getSpaces())
+        && !$nextLineTag->isLoud())) {
+      $content .= $this->getSpaces() . "<?php " . $this->_tags[$this->_tag] . "; ?>";
+    } else {
+      $content = rtrim($content);
+    }
+
     return $content;
   }
 }

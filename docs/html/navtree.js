@@ -24,12 +24,15 @@ var NAVTREE =
       [ "HamlPHP", "class_haml_p_h_p.html", null ],
       [ "Interpolation", "class_interpolation.html", null ],
       [ "InvalidTagException", "class_invalid_tag_exception.html", null ],
+      [ "JavascriptFilter", "class_javascript_filter.html", null ],
       [ "NodeFactory", "class_node_factory.html", null ],
+      [ "PhpFilter", "class_php_filter.html", null ],
       [ "PlainFilter", "class_plain_filter.html", null ],
       [ "ReadOnlyPropertyException", "class_read_only_property_exception.html", null ],
       [ "RootNode", "class_root_node.html", null ],
       [ "Storage", "interface_storage.html", null ],
       [ "StringScanner", "class_string_scanner.html", null ],
+      [ "SyntaxErrorException", "class_syntax_error_exception.html", null ],
       [ "TagNode", "class_tag_node.html", null ],
       [ "UndefinedPropertyException", "class_undefined_property_exception.html", null ]
     ] ],
@@ -51,6 +54,8 @@ var NAVTREE =
       [ "Element", "class_element.html", null ],
       [ "Filter", "interface_filter.html", [
         [ "CssFilter", "class_css_filter.html", null ],
+        [ "JavascriptFilter", "class_javascript_filter.html", null ],
+        [ "PhpFilter", "class_php_filter.html", null ],
         [ "PlainFilter", "class_plain_filter.html", null ]
       ] ],
       [ "FilterContainer", "class_filter_container.html", null ],
@@ -69,7 +74,8 @@ var NAVTREE =
       ] ],
       [ "Storage", "interface_storage.html", [
         [ "FileStorage", "class_file_storage.html", null ]
-      ] ]
+      ] ],
+      [ "SyntaxErrorException", "class_syntax_error_exception.html", null ]
     ] ],
     [ "Data Fields", "functions.html", null ],
     [ "File List", "files.html", [
@@ -82,6 +88,7 @@ var NAVTREE =
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/FilterNode.php", "_filter_node_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/HamlNode.php", "_haml_node_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/HamlPHP.php", "_haml_p_h_p_8php.html", null ],
+      [ "/projects/wp-haml/hamlphp/src/HamlPHP/Helpers.php", "_helpers_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Interpolation.php", "_interpolation_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/NodeFactory.php", "_node_factory_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/RootNode.php", "_root_node_8php.html", null ],
@@ -91,13 +98,16 @@ var NAVTREE =
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Filter/CssFilter.php", "_css_filter_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Filter/Filter.php", "_filter_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Filter/FilterContainer.php", "_filter_container_8php.html", null ],
+      [ "/projects/wp-haml/hamlphp/src/HamlPHP/Filter/JavascriptFilter.php", "_javascript_filter_8php.html", null ],
+      [ "/projects/wp-haml/hamlphp/src/HamlPHP/Filter/PhpFilter.php", "_php_filter_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Filter/PlainFilter.php", "_plain_filter_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Storage/FileStorage.php", "_file_storage_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Storage/Storage.php", "_storage_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Util/BaseException.php", "_base_exception_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Util/BaseObject.php", "_base_object_8php.html", null ],
       [ "/projects/wp-haml/hamlphp/src/HamlPHP/Util/StringScanner.php", "_string_scanner_8php.html", null ]
-    ] ]
+    ] ],
+    [ "Globals", "globals.html", null ]
   ] ]
 ];
 

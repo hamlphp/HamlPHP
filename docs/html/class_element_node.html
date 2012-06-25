@@ -101,21 +101,23 @@ Inheritance diagram for ElementNode:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_element_node.html#a74c269e79e38788c9b298f95a56b38bb">__construct</a> ($line)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_element_node.html#a16acfa59ca173a305816d43598e4d7d4">__construct</a> ($line, $compiler)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_element_node.html#afde88292c44dc59faf017738dae6dffb">render</a> ()</td></tr>
 <tr><td colspan="2"><h2><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_element_node.html#a696c227797cbfbcc9492af8fdf25620a">renderHtml</a> (<a class="el" href="class_element.html">Element</a> $element)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_element_node.html#a53487bf10d5c6c82f8b9ed8fc11edf3b">_renderArrayValue</a> ($parts, $separator= ' ', $context= 'txt')</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_element_node.html#a77eb86062573ab72290f3908117f2093">renderTagContent</a> ($content)</td></tr>
 <tr><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_element_node.html#ae39b5d97caf66c51dda7151d009ecbc1">$_phpVariable</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_element_node.html#a1b32bc6b19ecf10ca06a1798c0164c7b">$_el</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock">
 <p>Definition at line <a class="el" href="_element_node_8php_source.html#l00007">7</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a74c269e79e38788c9b298f95a56b38bb"></a><!-- doxytag: member="ElementNode::__construct" ref="a74c269e79e38788c9b298f95a56b38bb" args="($line)" -->
+<a class="anchor" id="a16acfa59ca173a305816d43598e4d7d4"></a><!-- doxytag: member="ElementNode::__construct" ref="a16acfa59ca173a305816d43598e4d7d4" args="($line, $compiler)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -123,22 +125,90 @@ Private Attributes</h2></td></tr>
           <td class="memname">__construct </td>
           <td>(</td>
           <td class="paramtype">$&#160;</td>
-          <td class="paramname"><em>line</em></td><td>)</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">$&#160;</td>
+          <td class="paramname"><em>compiler</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="class_haml_node.html#a74c269e79e38788c9b298f95a56b38bb">HamlNode</a>.</p>
+<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00016">16</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
 
-<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00011">11</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
-
-<p>References <a class="el" href="_root_node_8php_source.html#l00010">RootNode::__construct()</a>.</p>
+<p>References <a class="el" href="_root_node_8php_source.html#l00010">RootNode::__construct()</a>, and <a class="el" href="_haml_node_8php_source.html#l00047">HamlNode::getHaml()</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a53487bf10d5c6c82f8b9ed8fc11edf3b"></a><!-- doxytag: member="ElementNode::_renderArrayValue" ref="a53487bf10d5c6c82f8b9ed8fc11edf3b" args="($parts, $separator= ' ', $context= 'txt')" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">_renderArrayValue </td>
+          <td>(</td>
+          <td class="paramtype">$&#160;</td>
+          <td class="paramname"><em>parts</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">$&#160;</td>
+          <td class="paramname"><em>separator</em> = <code>'&#160;'</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">$&#160;</td>
+          <td class="paramname"><em>context</em> = <code>'txt'</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Joins the string $parts together using $separator but format the return according to context. This method concatenates all the parts using $separtor as glue. If the context is 'txt' and at least one part is php, the returned string will be encapsuled inside &lt;?php ... ?&gt; If the context is 'php' the string returned will be a valid php code. </p>
+<div class="fragment"><pre class="fragment">   <a class="code" href="class_element_node.html#a53487bf10d5c6c82f8b9ed8fc11edf3b">_renderArrayValue</a>(array(
+     array(<span class="charliteral">&#39;t&#39;</span> =&gt; <span class="stringliteral">&#39;str&#39;</span>, <span class="charliteral">&#39;v&#39;</span> =&gt; <span class="charliteral">&#39;a&#39;</span>,
+     array(<span class="charliteral">&#39;t&#39;</span> =&gt; <span class="stringliteral">&#39;str&#39;</span>, <span class="charliteral">&#39;v&#39;</span> =&gt; <span class="charliteral">&#39;b&#39;</span>));                  # -&gt; a_b
+     
+   <a class="code" href="class_element_node.html#a53487bf10d5c6c82f8b9ed8fc11edf3b">_renderArrayValue</a>(array(
+     array(<span class="charliteral">&#39;t&#39;</span> =&gt; <span class="stringliteral">&#39;str&#39;</span>, <span class="charliteral">&#39;v&#39;</span> =&gt; <span class="charliteral">&#39;a&#39;</span>,
+     array(<span class="charliteral">&#39;t&#39;</span> =&gt; <span class="stringliteral">&#39;str&#39;</span>, <span class="charliteral">&#39;v&#39;</span> =&gt; <span class="charliteral">&#39;b&#39;</span>), <span class="stringliteral">&#39;php&#39;</span>);   # -&gt; <span class="stringliteral">&#39;a_b&#39;</span>
+     
+   <a class="code" href="class_element_node.html#a53487bf10d5c6c82f8b9ed8fc11edf3b">_renderArrayValue</a>(array(
+     array(<span class="charliteral">&#39;t&#39;</span> =&gt; <span class="stringliteral">&#39;str&#39;</span>, <span class="charliteral">&#39;v&#39;</span> =&gt; <span class="charliteral">&#39;a&#39;</span>,
+     array(<span class="charliteral">&#39;t&#39;</span> =&gt; <span class="stringliteral">&#39;php&#39;</span>, <span class="charliteral">&#39;v&#39;</span> =&gt; <span class="stringliteral">&#39;$b&#39;</span>));                 # -&gt; &lt;?php echo <span class="stringliteral">&#39;a_&#39;</span>.$b; ?&gt;
+     
+   <a class="code" href="class_element_node.html#a53487bf10d5c6c82f8b9ed8fc11edf3b">_renderArrayValue</a>(array(
+     array(<span class="charliteral">&#39;t&#39;</span> =&gt; <span class="stringliteral">&#39;str&#39;</span>, <span class="charliteral">&#39;v&#39;</span> =&gt; <span class="charliteral">&#39;a&#39;</span>,
+     array(<span class="charliteral">&#39;t&#39;</span> =&gt; <span class="stringliteral">&#39;php&#39;</span>, <span class="charliteral">&#39;v&#39;</span> =&gt; <span class="stringliteral">&#39;$b&#39;</span>), <span class="stringliteral">&#39;php&#39;</span>);  # -&gt; <span class="stringliteral">&#39;a_&#39;</span>.$b
+</pre></div><dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$arr_parts</td><td>The components of the id </td></tr>
+    <tr><td class="paramname">$context</td><td>The context into which the value will be inserted. Can be 'txt' (default) or 'php' </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00154">154</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
+
+<p>Referenced by <a class="el" href="_element_node_8php_source.html#l00029">renderHtml()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="afde88292c44dc59faf017738dae6dffb"></a><!-- doxytag: member="ElementNode::render" ref="afde88292c44dc59faf017738dae6dffb" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -155,9 +225,9 @@ Private Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_haml_node.html#afde88292c44dc59faf017738dae6dffb">HamlNode</a>.</p>
 
-<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00017">17</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
+<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00024">24</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
 
-<p>References <a class="el" href="_haml_node_8php_source.html#l00047">HamlNode::getHaml()</a>, and <a class="el" href="_element_node_8php_source.html#l00024">renderHtml()</a>.</p>
+<p>References <a class="el" href="_element_node_8php_source.html#l00029">renderHtml()</a>.</p>
 
 </div>
 </div>
@@ -176,11 +246,11 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00024">24</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
+<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00029">29</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
 
-<p>References <a class="el" href="_element_8php_source.html#l00133">Element::getAttributes()</a>, <a class="el" href="_element_8php_source.html#l00128">Element::getClasses()</a>, <a class="el" href="_element_8php_source.html#l00118">Element::getId()</a>, <a class="el" href="_root_node_8php_source.html#l00038">RootNode::getIndentationLevel()</a>, <a class="el" href="_element_8php_source.html#l00138">Element::getInlineContent()</a>, <a class="el" href="_haml_node_8php_source.html#l00017">HamlNode::getSpaces()</a>, <a class="el" href="_element_8php_source.html#l00113">Element::getTag()</a>, and <a class="el" href="_element_node_8php_source.html#l00063">renderTagContent()</a>.</p>
+<p>References <a class="el" href="_element_node_8php_source.html#l00154">_renderArrayValue()</a>, <a class="el" href="_element_8php_source.html#l00603">Element::getAttributes()</a>, <a class="el" href="_root_node_8php_source.html#l00038">RootNode::getIndentationLevel()</a>, <a class="el" href="_element_8php_source.html#l00608">Element::getInlineContent()</a>, <a class="el" href="_haml_node_8php_source.html#l00017">HamlNode::getSpaces()</a>, <a class="el" href="_element_8php_source.html#l00578">Element::getTag()</a>, <a class="el" href="_element_node_8php_source.html#l00198">renderTagContent()</a>, and <a class="el" href="_element_8php_source.html#l00613">Element::useAttsHelper()</a>.</p>
 
-<p>Referenced by <a class="el" href="_element_node_8php_source.html#l00017">render()</a>.</p>
+<p>Referenced by <a class="el" href="_element_node_8php_source.html#l00024">render()</a>.</p>
 
 </div>
 </div>
@@ -199,15 +269,30 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00063">63</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
+<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00198">198</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
 
 <p>References <a class="el" href="_haml_node_8php_source.html#l00017">HamlNode::getSpaces()</a>, <a class="el" href="_root_node_8php_source.html#l00079">RootNode::hasChildren()</a>, and <a class="el" href="_root_node_8php_source.html#l00084">RootNode::renderChildren()</a>.</p>
 
-<p>Referenced by <a class="el" href="_element_node_8php_source.html#l00024">renderHtml()</a>.</p>
+<p>Referenced by <a class="el" href="_element_node_8php_source.html#l00029">renderHtml()</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Field Documentation</h2>
+<a class="anchor" id="a1b32bc6b19ecf10ca06a1798c0164c7b"></a><!-- doxytag: member="ElementNode::$_el" ref="a1b32bc6b19ecf10ca06a1798c0164c7b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">$_el<code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="_element_node_8php_source.html#l00014">14</a> of file <a class="el" href="_element_node_8php_source.html">ElementNode.php</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ae39b5d97caf66c51dda7151d009ecbc1"></a><!-- doxytag: member="ElementNode::$_phpVariable" ref="ae39b5d97caf66c51dda7151d009ecbc1" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -231,7 +316,7 @@ Private Attributes</h2></td></tr>
   <div id="nav-path" class="navpath">
     <ul>
       <li class="navelem"><a class="el" href="class_element_node.html">ElementNode</a>      </li>
-      <li class="footer">Generated on Sun Mar 20 2011 22:24:55 for HamlPHP by&#160;
+      <li class="footer">Generated on Mon Mar 28 2011 05:20:09 for HamlPHP by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </li>
     </ul>

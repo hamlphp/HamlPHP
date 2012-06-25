@@ -8,12 +8,18 @@ class TagNodeTest extends PHPUnit_Framework_TestCase
 
   public function __construct()
   {
-    $this->compiler = new Compiler();
+    $this->compiler = getTestCompiler();
   }
 
   public function testForLoop()
   {
     $actual = $this->compiler->parseFile(template('forloop.haml'));
     $this->assertEquals(contents('forloop_expected.html'), $actual);
+  }
+
+  public function testConditions()
+  {
+    $actual = $this->compiler->parseFile(template('conditions.haml'));
+    $this->assertEquals(contents('conditions_expected.html'), $actual);
   }
 }

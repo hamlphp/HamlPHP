@@ -6,14 +6,14 @@ class CompilerTest extends PHPUnit_Framework_TestCase
 {
   /**
    * Instance of a compiler.
-   * 
+   *
    * @var Compiler
    */
   protected $compiler = null;
 
   public function setUp()
   {
-    $this->compiler = new Compiler();
+    $this->compiler = getTestCompiler();
   }
 
   public function testCompilingFromString()
