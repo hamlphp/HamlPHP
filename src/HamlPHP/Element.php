@@ -2,14 +2,11 @@
 
 require_once 'HamlPHP.php';
 require_once 'Util/StringScanner.php';
-
-class SyntaxErrorException extends Exception
-{}
+require_once 'Exceptions.php';
 
 class Element
 {
 	//const HAML_REGEXP = '/^(?P<tag>%\w+)?(?P<id>#\w*)?(?P<classes>\.[\w\.\-]*)*(?P<attributes>\((?P<html_attrs>.+)\)|\{(?P<hash_attrs>.*)\})?(?P<php>=)?(?P<inline>[^\w\.#\{].*)?$/';
-
 
 	const ELEMENT = '%';
 	const ID = '#';
