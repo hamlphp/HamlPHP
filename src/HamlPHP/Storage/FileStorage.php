@@ -8,7 +8,7 @@ class FileStorage implements Storage, ContentEvaluator
 
   public function __construct($cachePath, $extension = '.cached.php')
   {
-    $this->_path = $cachePath;
+    $this->_path = rtrim($cachePath, '/\\').DIRECTORY_SEPARATOR;
     $this->_extension = $extension;
   }
 
