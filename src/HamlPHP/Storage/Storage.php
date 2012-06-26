@@ -13,7 +13,7 @@ interface Storage
   public function cache($id, $content);
 
   /**
-   * Returns content from a cache
+   * Returns content from a cache.
    */
   public function fetch($id);
 
