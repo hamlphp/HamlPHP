@@ -91,34 +91,15 @@ class DoctypeNode extends HamlNode
 	private $_encoding = 'utf-8';
 	
 	private $_doctypeMap = array(
-		'' => XHTML10_T,
-		'strict' => XHTML10_S,
-		'frameset' => XHTML10_F,
-		'5' => HTML5,
-		'1.1' => XHTML11,
-		'basic' => XHTML11_Basic,
-		'mobile' => XHMLT12_Mobile,
-		'rdfa' => XHTML_RDFa
+		'' => DoctypeNode::XHTML10_T,
+		'strict' => DoctypeNode::XHTML10_S,
+		'frameset' => DoctypeNode::XHTML10_F,
+		'5' => DoctypeNode::HTML5,
+		'1.1' => DoctypeNode::XHTML11,
+		'basic' => DoctypeNode::XHTML11_Basic,
+		'mobile' => DoctypeNode::XHTML12_Mobile,
+		'rdfa' => DoctypeNode::XHTML_RDFa
 	);
-	
-	// @todo: add the format option to the compiler
-	/**
-	 * Determines the output format.
-	 *
-	 *
-	 * Normally the default is :xhtml, although under Rails 3 it’s :html5, since
-	 * that’s the Rails 3’s default format.
-	 * Other options are :html4 and :html5, which are identical to :xhtml except
-	 * there are no self-closing tags,
-	 * the XML prolog is ignored and correct DOCTYPEs are generated
-	 *
-	 * When the :format option is set to :html5, the doctype is always <!DOCTYPE html>
-	 *
-	 * http://haml.info/docs/yardoc/file.HAML_REFERENCE.html#format-option
-	 * 
-	 * @var string
-	 */
-	private $_format = 'xhtml';
 
 	public function __construct($line)
 	{
@@ -139,28 +120,27 @@ class DoctypeNode extends HamlNode
 
 	private function renderDoctype()
 	{
-		
 		// When the :format option is set to :html5, !!! is always <!DOCTYPE html>
-		if($this->_format == 'html5')
-			return HTML5 . Env::$NL;
+		if(Config::$format == 'html5')
+			return DoctypeNode::HTML5 . Config::$NL;
 		
 		// When the :format option is set to :html4, ONLY the following doctypes are supported: HTML4, HTML4_S and HTML4_F 
-		if($this->_format == 'html4')
+		if(Config::$format == 'html4')
 		{
 			if('strict' == $this->type)
-				return HTML4_S . Env::$NL;
+				return DoctypeNode::HTML4_S . Config::$NL;
 			
 			if('frameset' == $this->type)
-				return HTML4_F . Env::$NL;
+				return DoctypeNode::HTML4_F . Config::$NL;
 			
-			return HTML4 . Env::$NL;
+			return DoctypeNode::HTML4 . Config::$NL;
 		}
 		
 		if('xml' == $this->_type) 
-			return str_replace($this->_doctypeMap['xml'], '%encoding%', $this->_encoding) . Env::$NL;
+			return str_replace($this->_doctypeMap['xml'], '%encoding%', $this->_encoding) . Config::$NL;
 		
 		if(isset($this->_doctypeMap[$this->_type])) 
-			return $this->_doctypeMap[$this->_type] . Env::$NL;
+			return $this->_doctypeMap[$this->_type] . Config::$NL;
 
 		return '';
 	}
