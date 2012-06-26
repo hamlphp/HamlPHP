@@ -24,6 +24,12 @@ class CompilerTest extends PHPUnit_Framework_TestCase
     $this->assertEquals($expected, $html);
   }
 
+  public function testInlinePhp()
+  {
+  	$html = $this->compiler->parseFile(template('inlinephp.haml'));
+  	$this->assertEquals(contents('inlinephp_expected.php'), $html);
+  }
+  
   public function testCompilingFromFile()
   {
     $html = $this->compiler->parseFile(template('test.haml'));
