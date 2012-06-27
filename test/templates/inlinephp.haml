@@ -1,0 +1,4 @@
+#access
+    .skip-link.screen-reader-text
+        %a{href => "#content", title => {esc_attr_e( 'Skip to content', 'twentyten' )}}= _e( 'Skip to content', 'twentyten' )
+    - wp_nav_menu( 'sort_column=menu_order' )

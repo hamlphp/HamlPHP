@@ -2,6 +2,12 @@
 
 require_once 'BaseObject.php';
 
+if(!defined('MATCH_MODE_HEAD_ONLY'))
+{
+	define('MATCH_MODE_HEAD_ONLY', 'headonly');
+	define('MATCH_MODE_ANYWHERE', 'anywhere');
+}
+
 /** @class StringScanner
  * @nosubgrouping
  * StringScanner provides for lexical scanning operations on a String. 
@@ -182,10 +188,29 @@ class StringScanner extends BaseObject implements ArrayAccess
 	 */
 	
  	/** @property read_only string $matched
- 	 * @brief Returns true if the last match was successful.
+ 	 * @brief Returns the last matched string
 	 * @memberof StringScanner
  	 * @readonly
  	 */
+	
+ 	/** @property read_only string $scanned
+ 	 * @brief Returns the entire string scanned in the last scan*() call
+	 * @memberof StringScanner
+ 	 * @readonly
+ 	 */
+	
+ 	/** @property read_only string $preMatch
+ 	 * @brief Returns the substring from the beginning of the scanned string to the start of the part used as match in the previous scanUntil call  
+	 * @memberof StringScanner
+ 	 * @readonly
+ 	 */
+
+	/** @property read_only string $postMatch
+	 * @brief Returns the string yet to be scanned
+	 * @memberof StringScanner
+	 * @readonly
+	 */
+	
 	/** @} */
 	
 	private $_string;
@@ -211,6 +236,12 @@ class StringScanner extends BaseObject implements ArrayAccess
 	 * @var int
 	 */
 	private $_lastMatchEnd;
+	
+	/**
+	 * The mode used to match the last regex. Can be MATCH_MODE_HEAD_ONLY or MATCH_MODE_ANYWHERE
+	 * @var string
+	 */
+	private $_lastMatchMode;
 	
 	private $_rest;
 
@@ -238,10 +269,13 @@ class StringScanner extends BaseObject implements ArrayAccess
 	 */
 	public function __construct($str, $encoding = null)
 	{
-	    if($encoding)
+	    if($encoding) {
 	    	$this->_encoding = $encoding;
-	    else
+	    	mb_internal_encoding($encoding);
+	    }
+	    else {
 	    	$this->_encoding = mb_internal_encoding();
+	    }
 	    
 	    $this->_string = $str;
 	    $this->reset();
@@ -260,16 +294,20 @@ class StringScanner extends BaseObject implements ArrayAccess
 		if($this->eos)
 			return null;
 	
-	    if ($head_only) {
-	    	$regex = $regex[0] . '^' . mb_substr($regex, 1, mb_strlen($regex), $this->_encoding);
-	    }
-	    else
-	    {
-	    	$delim = $regex[0];
-	    	$end_pos = strrpos($regex, $delim);
-	    	
-	    	$regex = "$delim.*?(".substr($regex, 1, $end_pos-1).")$delim".substr($regex, $end_pos+1);
-	    }
+		if(!empty($regex))
+		{
+			$delim = mb_substr($regex, 0, 1);
+			$delim_len = mb_strlen($delim);
+			$end_pos = mb_strrpos($regex, $delim);
+			
+			$regex = mb_substr($regex, $delim_len, $end_pos - $delim_len);
+			$options = mb_substr($regex, $end_pos+$delim_len, null);
+			
+		    if ($head_only)
+		    	$regex = "{$delim}^({$regex}){$delim}{$options}";
+		    else
+		    	$regex = "{$delim}.*?($regex){$delim}{$options}";
+		}
 	
 	    $ret = preg_match($regex, $this->_rest, $this->_matches);
 	    
@@ -282,10 +320,14 @@ class StringScanner extends BaseObject implements ArrayAccess
 	        return null;
 	    }
 	    
-	    $this->_matched($update_ptr);
+	    $this->_matched($update_ptr, $head_only ? MATCH_MODE_HEAD_ONLY : MATCH_MODE_ANYWHERE);
+
+	    // removes the extra ()s added for processing the regex
+	    if($head_only)
+	    	array_shift($this->_matches);
 	    
 	    if ($get_str) {
-	        return mb_substr($this->_string, $this->_prev, $this->_lastMatchEnd - $this->_prev, $this->_encoding);
+	        return mb_substr($this->_string, $this->_prev, $this->_lastMatchEnd - $this->_prev);
 	    }
 	    else {
 	        return $this->_lastMatchEnd - $this->_prev;
@@ -298,18 +340,24 @@ class StringScanner extends BaseObject implements ArrayAccess
 	 * Update optimization vars based on the last match
 	 * 
 	 * @param bool $update_curr Wheter to update the pointer or not
+	 * @param MATCH_MODE $matchMode The mode used to match the regex. Can be MATCH_MODE_HEAD_ONLY or MATCH_MODE_ANYWHERE
 	 */
-	private function _matched($update_curr)
+	private function _matched($update_curr, $matchMode)
 	{
+		$mtch = MATCH_MODE_HEAD_ONLY == $matchMode ? $this->_matches[0] : $this->_matches[1];
+		$mtch_pos = mb_strrpos($this->_matches[0], $mtch);
+		
 	    $this->_prev = $this->_curr;
-	    $this->_lastMatchBeg = $this->_curr + (empty($this->_matches[0]) ? 0 : mb_strpos($this->_rest, $this->_matches[0], 0, $this->_encoding));
-	    $this->_lastMatchEnd = $this->_lastMatchBeg + mb_strlen($this->_matches[0], $this->_encoding);
+	    
+	    $this->_lastMatchBeg = $this->_curr + (empty($mtch) ? 0 : $mtch_pos !== false ? $mtch_pos : mb_strlen($this->_matches[0]));
+	    $this->_lastMatchEnd = $this->_lastMatchBeg + mb_strlen($mtch);
+	    $this->_lastMatchMode = $matchMode; 
 	    
 	    if($update_curr)
 	    {
 	    	$this->_curr = $this->_lastMatchEnd;
-	    	$this->_rest = mb_substr($this->_string, $this->_curr, $this->_size, $this->_encoding);
-	    	$this->_restSize = mb_strlen($this->_rest, $this->_encoding);
+	    	$this->_rest = mb_substr($this->_string, $this->_curr, $this->_size);
+	    	$this->_restSize = mb_strlen($this->_rest);
 	    }
 	}
 	
@@ -324,9 +372,9 @@ class StringScanner extends BaseObject implements ArrayAccess
 	{   
 	    if($keep_pointer)
 	    {
-	    	$this->_size = mb_strlen($this->_string, $this->_encoding);
-	    	$this->_rest = mb_substr($this->_string, $this->_curr, $this->_size, $this->_encoding);
-	    	$this->_restSize = mb_strlen($this->_rest, $this->_encoding);
+	    	$this->_size = mb_strlen($this->_string);
+	    	$this->_rest = mb_substr($this->_string, $this->_curr, $this->_size);
+	    	$this->_restSize = mb_strlen($this->_rest);
 	    	
 	    	if($this->_curr > $this->_size)
 	    		throw new Exception('The operation resulted in an invalid pointer position!');
@@ -336,7 +384,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 	    	$this->_prev = null;
 	    	$this->_curr = 0;
 		    $this->_rest = $this->_string;
-	    	$this->_restSize = $this->_size = mb_strlen($this->_string, $this->_encoding);
+	    	$this->_restSize = $this->_size = mb_strlen($this->_string);
 		    $this->_matches = $this->_lastMatchBeg = $this->_lastMatchEnd = null;
 	    }
 	}
@@ -558,9 +606,9 @@ class StringScanner extends BaseObject implements ArrayAccess
 		if($this->eos)
 			return null;
 			
-		$ch = mb_substr($this->_rest, 0, 1, $this->_encoding);
+		$ch = mb_substr($this->_rest, 0, 1);
 		$this->_matches[0] = $ch;
-		$this->_matched(true);
+		$this->_matched(true, MATCH_MODE_HEAD_ONLY);
 		
 		return $ch;
 	}
@@ -585,14 +633,14 @@ class StringScanner extends BaseObject implements ArrayAccess
 			$s .= '"';
 			if($this->_curr > 5)
 				$s .= '...';
-			$s .= mb_substr($this->_string, $this->_curr-5, 5, $this->_encoding).'" ';
+			$s .= mb_substr($this->_string, $this->_curr-5, 5).'" ';
 		}
 		
 		$s .= '@ ';
 	
 		if($this->_curr < $this->_size)
 		{
-			$s .= '"'.mb_substr($this->_rest, 0, 5, $this->_encoding);
+			$s .= '"'.mb_substr($this->_rest, 0, 5);
 			if($this->_restSize > 5)
 				$s .= '...';
 			$s .= '">';
@@ -644,9 +692,27 @@ class StringScanner extends BaseObject implements ArrayAccess
 	 * @return string
 	 */
 	public function getMatched() {
-		if(isset($this->_matches[0]))
-			return $this->_matches[0];
+		
+		if(MATCH_MODE_HEAD_ONLY == $this->_lastMatchMode)
+			return isset($this->_matches[0]) ? $this->_matches[0] : null;
+		
+		if(isset($this->_matches[1]))
+			return $this->_matches[1];
+		
 		return null;
+	}
+	
+	/**
+	 * Returns the last matched string.
+	 * @code
+	 *   $s = new StringScanner('test string');
+	 *   $s->match('/\w+/');     # -> 4
+	 *   $s->matched;            # -> "test"
+	 * @endcode
+	 * @return string
+	 */
+	public function getScanned() {
+		return isset($this->_matches[0]) ? $this->_matches[0] : null;
 	}
 	
 	/**
@@ -662,7 +728,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 	 */
 	public function getMatchedSize() {
 		if(isset($this->_matches[0]))
-			return mb_strlen($this->_matches[0], $this->_encoding);
+			return mb_strlen($this->_matches[0]);
 		
 		return null;
 	}
@@ -684,7 +750,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 		if($this->eos)
 			return null;
 		
-		return mb_substr($this->_rest, $this->_curr, $len, $this->_encoding);
+		return mb_substr($this->_rest, $this->_curr, $len);
 	}
 	
 	/**
@@ -766,7 +832,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 		if(!isset($this->_matches[0]))
 			return null;
 			
-		return mb_substr($this->_string, $this->_lastMatchEnd, $this->_size, $this->_encoding);
+		return mb_substr($this->_string, $this->_lastMatchEnd, $this->_size);
 	}
 	
 	/**
@@ -786,7 +852,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 		if(!isset($this->_matches[0]))
 			return null;
 			
-		return mb_substr($this->_string, 0, $this->_lastMatchBeg, $this->_encoding);
+		return mb_substr($this->_string, $this->_prev, $this->_lastMatchBeg - $this->_prev);
 	}
 	
 	/**
@@ -983,7 +1049,7 @@ class StringScanner extends BaseObject implements ArrayAccess
 			throw new Exception("Unscan failed: previous match record not exist.");
 			
 		$this->_curr = $this->_prev;
-		$this->_rest = mb_substr($this->_string, $this->_curr, $this->_size, $this->_encoding);
+		$this->_rest = mb_substr($this->_string, $this->_curr, $this->_size);
     	$this->_clear_matched();
 	}
 }

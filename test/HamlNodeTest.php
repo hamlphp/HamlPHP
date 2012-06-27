@@ -1,7 +1,7 @@
 <?php
 
 require_once 'test_helper.php';
-require_once 'src/HamlPHP/HamlNode.php';
+require_once HAMLPHP_ROOT.'Lang/Nodes/HamlNode.php';
 
 class HamlNodeTest extends PHPUnit_Framework_TestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
-require_once HAMLPHP_DIR_SRC . '/Helpers.php';
 require_once 'test_helper.php';
+require_once HAMLPHP_ROOT . 'Lang/Helpers.php';
 
 class HelpersTest extends PHPUnit_Framework_TestCase
 {

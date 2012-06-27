@@ -1,10 +1,9 @@
 <?php
 
+require_once 'src/HamlPHP/Config.php';
 require_once 'src/HamlPHP/HamlPHP.php';
 require_once 'src/HamlPHP/Storage/FileStorage.php';
 require_once 'src/HamlPHP/Compiler.php';
-
-define("HAMLPHP_DIR_SRC", dirname(__FILE__) . '/../src/HamlPHP');
 
 function template($template) {
   return dirname(__FILE__) . '/templates/' . $template;
