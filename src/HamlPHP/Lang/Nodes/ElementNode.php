@@ -1,8 +1,6 @@
 <?php
 
-require_once 'RootNode.php';
-require_once 'HamlNode.php';
-require_once 'Element.php';
+require_once HAMLPHP_ROOT.'Lang/Element.php';
 
 class ElementNode extends HamlNode
 {

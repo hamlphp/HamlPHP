@@ -1,11 +1,15 @@
 <?php
+/**
+ * This file should include all nodes in the Node package
+ */
+require_once 'Lang/Nodes/RootNode.php';
+require_once 'Lang/Nodes/HamlNode.php';
 
-require_once 'ElementNode.php';
-require_once 'HamlNode.php';
-require_once 'DoctypeNode.php';
-require_once 'TagNode.php';
-require_once 'CommentNode.php';
-require_once 'FilterNode.php';
+require_once 'Lang/Nodes/CommentNode.php';
+require_once 'Lang/Nodes/DoctypeNode.php';
+require_once 'Lang/Nodes/ElementNode.php';
+require_once 'Lang/Nodes/FilterNode.php';
+require_once 'Lang/Nodes/TagNode.php';
 
 class NodeFactory
 {

@@ -1,15 +1,12 @@
 <?php
 
-require_once 'HamlPHP.php';
-require_once 'Util/StringScanner.php';
-
-class SyntaxErrorException extends Exception
-{}
+require_once HAMLPHP_ROOT.'/HamlPHP.php';
+require_once HAMLPHP_ROOT.'/Util/StringScanner.php';
+require_once HAMLPHP_ROOT.'/Exceptions.php';
 
 class Element
 {
 	//const HAML_REGEXP = '/^(?P<tag>%\w+)?(?P<id>#\w*)?(?P<classes>\.[\w\.\-]*)*(?P<attributes>\((?P<html_attrs>.+)\)|\{(?P<hash_attrs>.*)\})?(?P<php>=)?(?P<inline>[^\w\.#\{].*)?$/';
-
 
 	const ELEMENT = '%';
 	const ID = '#';
@@ -372,7 +369,7 @@ class Element
 			'class' => array(),
 			'id' => array()
 		);
-		$litRe = '/(["\\\']).*?\\1(?=[\\s|=])|:?[\\-\\w:]*/';
+		$litRe = '/(["\\\']).*?\\2(?=[\\s|=])|:?[\\-\\w:]*/';
 
 		$scanner->scan('/\\s*\\{?\\s*/');
 
@@ -381,8 +378,9 @@ class Element
 			$scanner->scan('/\\s*/');
 
 			$name = trim($scanner->scan($litRe), ':"\'');
-			if (! $name)
+			if (! $name) {
 				throw new SyntaxErrorException("Invalid attribute list. Expecting an attribute name");
+			}
 
 			if (! $scanner->scan('/\s*=>\s*/'))
 			{
@@ -411,10 +409,11 @@ class Element
 					$quote = $scanner->scan('/["\']/');
 					$value = $scanner->scan("/(.*?[^\\\\])$quote/");
 
-					if($name == 'class' || $name == 'id')
+					if($name == 'class' || $name == 'id') {
 						$atts[$name][] =  array(
 							't' => 'str' , 'v' => $scanner[1]
 						);
+					}
 					else
 					{
 						$value = $this->_interpolate($quote . $value);
@@ -466,8 +465,8 @@ class Element
 					}
 					else
 					{
-						$value = trim($scanner->scanUntil('/.(?=,)|.(?=\\})/'));
-
+						$value = trim($scanner->scanUntil('/(?=[,\\}])/'));
+						
 						if($name == 'class' || $name == 'id')
 							$atts[$name][] =  array(
 								't' => 'php' , 'v' => $value
