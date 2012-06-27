@@ -2,7 +2,7 @@
 
 require_once 'test_helper.php';
 
-require_once HAMLPHP_DIR_SRC . "/util/StringScanner.php";
+require_once HAMLPHP_ROOT . "/Util/StringScanner.php";
 
 class StringScannerTest extends PHPUnit_Framework_TestCase
 {
@@ -10,10 +10,10 @@ class StringScannerTest extends PHPUnit_Framework_TestCase
 	{
 		$s = new StringScanner("Fri Dec 12 1975 14:39");
 		$m = $s->scan('/(\w+) (\w+) (\d+) /');
-		$this->assertEquals("Fri Dec 12 ", $m);
+		$this->assertEquals("Fri Dec 12 ", $m, '$s->scan("/(\w+) (\w+) (\d+) /") should return "Fri Dec 12 " for line "Fri Dec 12 1975 14:39"');
 
 		$s = new StringScanner("Fri Dec 12 1975 14:39");
-		$this->assertEquals("Fri ", $s->scan('/Fri /'));
+		$this->assertEquals("Fri ", $s->scan('/Fri /'), '$s->scan("/Fri /") should return "Fri "');
 		$this->assertEquals("Dec", $s->scan('/Dec/'));
 		$this->assertEquals(" 12", $s->scan('/\s12/'));
 		$this->assertEquals(" 1975 14", $s->scan('/[0-9\s]+/'));
@@ -24,6 +24,15 @@ class StringScannerTest extends PHPUnit_Framework_TestCase
 
 	public function testArrayAccess()
 	{
+		$s = new StringScanner("Fri Dec 12 1975 14:39");
+		
+		$m = $s->scanUntil('/(\w+) (\d+) /');
+		$this->assertEquals("Fri Dec 12 ", $m, "ScanUntil failed so testing ArrayAccess makes no sense.");
+		$this->assertEquals("Fri Dec 12 ", $s[0]);
+		$this->assertEquals("Dec 12 ", $s[1]);
+		$this->assertEquals("Dec", $s[2]);
+		$this->assertEquals("12", $s[3]);
+
 		$s = new StringScanner("Fri Dec 12 1975 14:39");
 		$m = $s->scan('/(\w+) (\w+) (\d+) /');
 		$this->assertEquals("Fri Dec 12 ", $m, "Scan failed so testing ArrayAccess makes no sense.");
@@ -49,10 +58,10 @@ class StringScannerTest extends PHPUnit_Framework_TestCase
 	{
 		$s = new StringScanner("Fri Dec 12 1975 14:39");
 	    $this->assertEquals('Fri', $s->check('/Fri/'));
-	    $this->assertEquals(0, $s->pos);
-	    $this->assertEquals('Fri', $s->matched);
-	    $this->assertNull($s->check('/12/'));
-	    $this->assertNull($s->matched);
+	    $this->assertEquals(0, $s->pos, '$s->pos should be 0');
+	    $this->assertEquals('Fri', $s->matched, '$s->matched should return "Fri"');
+	    $this->assertNull($s->check('/12/'), '$s->check(\'/12/\') should return null');
+	    $this->assertNull($s->matched, '$s->matched should return null');
 	}
 
 	public function testCheckUntil()
@@ -60,7 +69,7 @@ class StringScannerTest extends PHPUnit_Framework_TestCase
 		$s = new StringScanner("Fri Dec 12 1975 14:39");
 	    $this->assertEquals("Fri Dec 12", $s->checkUntil('/12/'));
 	    $this->assertEquals(0, $s->pos);
-	    $this->assertEquals("12", $s->matched);
+	    $this->assertEquals('12', $s->matched);
 	}
 
 	public function testConcat() {
@@ -140,17 +149,33 @@ class StringScannerTest extends PHPUnit_Framework_TestCase
 
 	public function testPreAndPostMatch() {
 		$s = new StringScanner('test string');
-	    $s->scan('/\w+/');           # -> "test"
-	    $s->scan('/\s+/');           # -> " "
+	    $s->scanUntil('/\s+/');
 	    $this->assertEquals('test', $s->preMatch);
 	    $this->assertEquals('string', $s->postMatch);
 	}
 
 	public function testScanUntil() {
 		$s = new StringScanner("Fri Dec 12 1975 14:39");
-	    $this->assertEquals("Fri Dec 1", $s->scanUntil('/1/'));
-	    $this->assertEquals("Fri Dec ", $s->preMatch);
-	    $this->assertNull($s->scanUntil('/XYZ/'));
+	    $this->assertEquals("Fri Dec 1", $s->scanUntil('/1/'), '$s->scanUntil("/1/") should return "Fri Dec 1"');
+	    $this->assertEquals("1", $s->matched);
+	    $this->assertEquals("Fri Dec ", $s->preMatch, '$s->preMatch should be "Fri Dec "');
+	    $this->assertNull($s->scanUntil('/XYZ/'), '$s->scanUntil("/XYZ/") should return null for the string "Fri Dec 12 1975 14:39"');
+	    
+	    $s = new StringScanner('$complex ? \'php\' : "nothing", another="test"');
+	    $return = $s->scanUntil('/[^,\\}](?=[,\\}])/');
+	    $this->assertEquals($return, $s->scanned, 'Return value of scanUntil() should be equals $scanner->scanned');
+	    $this->assertEquals('$complex ? \'php\' : "nothing"', $return, "The scanned value must contain the match");
+	    $this->assertEquals('$complex ? \'php\' : "nothing', $s->prematch);
+	    $this->assertEquals(', another="test"', $s->postMatch);
+	    
+	    $s = new StringScanner('$complex ? \'php\' : "nothing"}');
+	    $return = $s->scanUntil('/(?=[,\\}])/');
+	    $this->assertEquals($return, $s->scanned, 'Return value of scanUntil() should be equals $scanner->scanned');
+	    $this->assertEquals('$complex ? \'php\' : "nothing"', $return, "The scanned value must contain the match");
+	    $this->assertEquals('$complex ? \'php\' : "nothing"', $s->prematch);
+	    $this->assertEquals('}', $s->postMatch);
+
+	    //$s = new StringScanner('$complex ? \'php\' : "nothing"}');
 	}
 
 	public function testSkipAndSkipUntil() {

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Interpolation.php';
+require_once HAMLPHP_ROOT.'Lang/Interpolation.php';
 
 class DoctypeNode extends HamlNode
 {

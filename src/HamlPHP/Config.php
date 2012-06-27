@@ -1,5 +1,7 @@
 <?php
 
+define('HAMLPHP_ROOT', dirname(__FILE__).DIRECTORY_SEPARATOR);
+
 class Config
 {
 	/**

@@ -1,7 +1,6 @@
 <?php
 
 require_once 'NodeFactory.php';
-require_once 'RootNode.php';
 
 require_once 'Filter/FilterContainer.php';
 require_once 'Filter/CssFilter.php';
@@ -68,7 +67,8 @@ class Compiler
 			}
 			catch(Exception $e)
 			{
-				throw new Exception("Error parsing line:\n{$rawLines[$this->_currLine]}\n" . $e->getMessage(), $e->getCode());
+				$line = isset($rawLines[$this->_currLine]) ? $rawLines[$this->_currLine] : isset($rawLines[$this->_currLine-1]) ? $rawLines[$this->_currLine-1] : "UNKNOWN";
+				throw new SyntaxErrorException("Error parsing line:\n{$line}\n" . $e->getMessage(), $e->getCode());
 			}
 		}
 		

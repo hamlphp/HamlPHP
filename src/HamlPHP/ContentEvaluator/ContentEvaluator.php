@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../Helpers.php';
+require_once HAMLPHP_ROOT.'Lang/Helpers.php';
 
 interface ContentEvaluator
 {

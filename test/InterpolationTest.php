@@ -1,7 +1,7 @@
 <?php
 
 require_once 'test_helper.php';
-require_once 'src/HamlPHP/Interpolation.php';
+require_once '../src/HamlPHP/Lang/Interpolation.php';
 
 class InterpolationTest extends PHPUnit_Framework_TestCase
 {
