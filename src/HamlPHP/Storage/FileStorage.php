@@ -1,5 +1,7 @@
 <?php
 
+require_once HAMLPHP_ROOT . 'ContentEvaluator/ContentEvaluator.php';
+
 class FileStorage implements Storage, ContentEvaluator
 {
   protected $_path = null;

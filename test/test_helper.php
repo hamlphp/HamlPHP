@@ -5,6 +5,9 @@ require_once 'src/HamlPHP/HamlPHP.php';
 require_once 'src/HamlPHP/Storage/FileStorage.php';
 require_once 'src/HamlPHP/Compiler.php';
 
+if(!defined('TEST_TMP_DIR'))
+	define('TEST_TMP_DIR', dirname(__FILE__) . '/tmp/');
+
 function template($template) {
   return dirname(__FILE__) . '/templates/' . $template;
 }

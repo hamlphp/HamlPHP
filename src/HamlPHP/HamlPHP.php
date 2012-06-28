@@ -3,13 +3,11 @@
 require_once 'Config.php';
 require_once 'Storage/Storage.php';
 require_once 'Compiler.php';
-require_once 'ContentEvaluator/DefaultContentEvaluator.php';
 
 class HamlPHP
 {
 	private $_compiler = null;
 	private $_storage = null;
-	private $_contentEvaluator = null;
 	private $_nodeFactory = null;
 	private $_filterContainer = null;
 	private $_cacheEnabled = true;
@@ -141,7 +139,7 @@ class HamlPHP
 	{
 		$content = $this->getContentFromStorage($fileName);
 
-		return $this->_contentEvaluator->evaluate(
+		return $this->evaluate(
 				$content, $templateVars, $this->generateFileId($fileName));
 	}
 
@@ -176,23 +174,19 @@ class HamlPHP
 	
 	public function evaluate($content, array $contentVariables = array())
 	{
-		/*
+		
 		$tempFileName = tempnam("/tmp", "foo");
 		$fp = fopen($tempFileName, "w");
 		fwrite($fp, $content);
-	
+		
+		// @todo: why not use eval()?
 		ob_start();
-		extract($contentVariables);
+		extract($contentVariables); 
 		require $tempFileName;
 		$result = ob_get_clean();
 	
 		fclose($fp);
 		unlink($tempFileName);
-		*/
-		ob_start();
-		extract($contentVariables);
-		eval($content);
-		$result = ob_get_clean();
 		
 		return $result;
 	}

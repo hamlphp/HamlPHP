@@ -1,0 +1,13 @@
+!!! 5
+%html
+  %body
+    #container
+      %ul.navigation
+        %li Etusivu
+        %li Tuotteet
+
+      %h2 Tuotteet
+      %ul.products 
+        %li= 1 * 6
+        - for ($i = 0; $i < 10; $i++)
+          %li= $i + 3
