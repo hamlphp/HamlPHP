@@ -28,8 +28,8 @@ class AttributesTest extends PHPUnit_Framework_TestCase
 
   public function testAttributes()
   {
-    $actual = $this->compiler->parseFile(template('attributes.haml'));
-    $this->assertEquals(contents('attributes_expected.html'), $actual);
+    $actual = $this->compiler->parseFile(template_path('attributes'));
+    $this->assertEquals(expected_result('attributes'), $actual);
   }
 
   public function testHtmlAttributes()

@@ -16,8 +16,8 @@ class ElementNodeTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testElementsWithTemplate() {
-        $actual = $this->compiler->parseFile(template('elements.haml'));
-        $this->assertEquals(contents('elements_expected.html'), $actual);
+        $actual = $this->compiler->parseFile(template_path('elements'));
+        $this->assertEquals(expected_result('elements'), $actual);
     }
 }
 

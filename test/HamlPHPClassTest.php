@@ -45,7 +45,7 @@ class HamlPHPClassTest extends PHPUnit_Framework_TestCase
 		$parser = new HamlPHP(new FileStorage(TEST_TMP_DIR));
 		
 		$expected = contents(template('readme_example.php'));
-		$actual = $parser->parseFile(template('readme_example.haml'));
+		$actual = $parser->parseFile(template_path('readme_example'));
 		
 		$this->assertEquals($expected, $actual);
 	}

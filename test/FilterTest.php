@@ -13,7 +13,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
   public function testAttributes()
   {
-    $actual = $this->compiler->parseFile(template('filters.haml'));
-    $this->assertEquals(contents('filters_expected.html'), $actual);
+    $actual = $this->compiler->parseFile(template_path('filters'));
+    $this->assertEquals(expected_result('filters'), $actual);
   }
 }

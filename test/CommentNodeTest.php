@@ -18,7 +18,7 @@ class CommentNodeTest extends PHPUnit_Framework_TestCase
 
   public function testComments()
   {
-    $html = $this->compiler->parseFile(template('comments.haml'));
-    $this->assertEquals(contents('comments_expected.html'), $html);
+    $html = $this->compiler->parseFile(template_path('comments'));
+    $this->assertEquals(expected_result('comments'), $html);
   }
 }

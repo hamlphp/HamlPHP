@@ -13,7 +13,7 @@ class TryHamlTest extends PHPUnit_Framework_TestCase
 
   public function testForLoop()
   {
-    $actual = $this->compiler->parseFile(template('try.haml'));
-    $this->assertEquals(contents('try_expected.html'), $actual);
+    $actual = $this->compiler->parseFile(template_path('try'));
+    $this->assertEquals(expected_result('try'), $actual);
   }
 }

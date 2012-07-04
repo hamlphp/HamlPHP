@@ -65,7 +65,7 @@ class InterpolationTest extends PHPUnit_Framework_TestCase
 
   public function testInterpolationTemplate()
   {
-    $actual = $this->compiler->parseFile(template('interpolation.haml'));
-    $this->assertEquals(contents('interpolation_expected.html'), $actual);
+    $actual = $this->compiler->parseFile(template_path('interpolation'));
+    $this->assertEquals(expected_result('interpolation'), $actual);
   }
 }

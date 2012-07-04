@@ -13,13 +13,13 @@ class TagNodeTest extends PHPUnit_Framework_TestCase
 
   public function testForLoop()
   {
-    $actual = $this->compiler->parseFile(template('forloop.haml'));
-    $this->assertEquals(contents('forloop_expected.html'), $actual);
+    $actual = $this->compiler->parseFile(template_path('forloop'));
+    $this->assertEquals(expected_result('forloop'), $actual);
   }
 
   public function testConditions()
   {
-    $actual = $this->compiler->parseFile(template('conditions.haml'));
-    $this->assertEquals(contents('conditions_expected.html'), $actual);
+    $actual = $this->compiler->parseFile(template_path('conditions'));
+    $this->assertEquals(expected_result('conditions'), $actual);
   }
 }

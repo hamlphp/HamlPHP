@@ -8,16 +8,16 @@ require_once 'src/HamlPHP/Compiler.php';
 if(!defined('TEST_TMP_DIR'))
 	define('TEST_TMP_DIR', dirname(__FILE__) . '/tmp/');
 
-function template($template) {
-  return dirname(__FILE__) . '/templates/' . $template;
+function template_path($template) {
+	return dirname(__FILE__) . '/templates/' . $template . '.haml';
 }
 
-function contents($template) {
-  return file_get_contents(template($template));
+function expected_result($template) {
+	return file_get_contents(dirname(__FILE__) . '/templates/' . $template . '_expected.php');
 }
 
 function getTestCompiler() {
-  $hamlPHP = new HamlPHP(new FileStorage(dirname(__FILE__) . '/tmp/'));
-  $hamlPHP->disableCache();
-  return $hamlPHP->getCompiler();
+	$hamlPHP = new HamlPHP(new FileStorage(dirname(__FILE__) . '/tmp/'));
+	$hamlPHP->disableCache();
+	return $hamlPHP->getCompiler();
 }
