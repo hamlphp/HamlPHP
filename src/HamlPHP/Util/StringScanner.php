@@ -262,6 +262,8 @@ class StringScanner extends BaseObject implements ArrayAccess
 		'eos' => 'isEos',
 	);
 	
+	const rQUOTE = '/["\']/';
+	
 	/**
 	 * Creates a new StringScanner object to scan over the given $string.
 	 * @param string $str The string to be scanned
@@ -299,9 +301,9 @@ class StringScanner extends BaseObject implements ArrayAccess
 			$delim = mb_substr($regex, 0, 1);
 			$delim_len = mb_strlen($delim);
 			$end_pos = mb_strrpos($regex, $delim);
-			
+
+			$options = mb_substr($regex, $end_pos+$delim_len);
 			$regex = mb_substr($regex, $delim_len, $end_pos - $delim_len);
-			$options = mb_substr($regex, $end_pos+$delim_len, null);
 			
 		    if ($head_only)
 		    	$regex = "{$delim}^({$regex}){$delim}{$options}";
