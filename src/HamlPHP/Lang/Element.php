@@ -1,5 +1,6 @@
 <?php
 
+require_once HAMLPHP_ROOT.'/Util/StringHelper.php';
 require_once HAMLPHP_ROOT.'/HamlPHP.php';
 require_once HAMLPHP_ROOT.'/Util/StringScanner.php';
 require_once HAMLPHP_ROOT.'/Exceptions.php';
@@ -300,10 +301,11 @@ class Element
 				$scanner->scan('/\s*/');
 
 				// if we don't find a quote, it's a php value
+				// e.g: name=$avar
 				if (! ($quote = $scanner->scan('/["\\\']/')))
 				{
 					if (! $var = $scanner->scan('/\$\w+/')) // in this mode only variables are accepted
-						throw new SyntaxErrorException("Invalid attribute list: {$scanner->string}");
+						throw new SyntaxErrorException("Invalid attribute value for $name in list: {$scanner->string}");
 
 					if($name == 'class' || $name == 'id')
 						$atts[$name][] =  array(
@@ -314,6 +316,7 @@ class Element
 							't' => 'php' , 'v' => $var
 						);
 				}
+				// e.g: checked="true"
 				elseif ($scanner->scan('/true|false/i'))
 				{
 					if ($scanner[0] == 'true')
@@ -407,8 +410,9 @@ class Element
 				case '"':
 				case "'":
 					$quote = $scanner->scan('/["\']/');
-					$value = $scanner->scan("/(.*?[^\\\\])$quote/");
-
+					$scanner->scan("/(.*?[^\\\\])$quote/");
+					$value = $scanner[1];
+					
 					if($name == 'class' || $name == 'id') {
 						$atts[$name][] =  array(
 							't' => 'str' , 'v' => $scanner[1]
@@ -416,9 +420,8 @@ class Element
 					}
 					else
 					{
-						$value = $this->_interpolate($quote . $value);
 						$atts[$name] = array(
-							't' => 'str' , 'v' => $value
+							't' => 'str' , 'v' => $quote . $value . $quote
 						);
 					}
 					break;
@@ -534,20 +537,31 @@ class Element
 		);
 	}
 
+	private function _containsInterpolation($str)
+	{
+		return preg_match('/(?<!\\\\)\\#\\{/', $str);
+	}
+	
 	private function _interpolate($str)
 	{
-		if (! preg_match('/(?<!\\\\)\\#\\{/', $str))
+		if (! $this->_containsInterpolation($str))
 			return $str;
 
-		if ($str[0] != '"' && $str[0] != "'")
+		$nStr = '';
+		$s = new StringScanner($str);
+		
+		$quote = $s->check(StringScanner::rQUOTE);
+		// If it doesn't starts with a quote, it CAN'T be inside php context
+		if (empty($quote) || !s($str)->endsWith($quote))
 		{
 			$int = new Interpolation($str);
 			return $int->render();
 		}
-
-		$nStr = '';
-		$s = new StringScanner($str);
-
+		
+		$int = new Interpolation($str, true);
+		return $int->render();
+		
+/*
 		$quote = $s->scan('/["\']/');
 
 		while (! $s->eos)
@@ -571,6 +585,7 @@ class Element
 			return $quote . trim($nStr, ". {$quote}");
 
 		return $quote . $nStr . $s->rest;
+		*/
 	}
 
 	public function getTag()
@@ -613,9 +628,9 @@ class Element
 		return $this->_useAttsHelper;
 	}
         
-        public function isSelfClosing() {
-                return $this->_selfClosing;
-        }
+	public function isSelfClosing() {
+		return $this->_selfClosing;
+	}
 }
 
 ?>

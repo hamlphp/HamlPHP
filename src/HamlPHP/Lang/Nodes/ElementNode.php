@@ -1,12 +1,13 @@
 <?php
 
-require_once HAMLPHP_ROOT.'Lang/Element.php';
+require_once HAMLPHP_ROOT . 'Lang/Element.php';
 
 class ElementNode extends HamlNode
 {
 	private $_phpVariable;
 	
 	/**
+	 *
 	 * @var Element
 	 */
 	private $_el;
@@ -28,7 +29,7 @@ class ElementNode extends HamlNode
 	{
 		$output = '';
 		
-		if ($this->getIndentationLevel() > 0)
+		if($this->getIndentationLevel() > 0)
 		{
 			$output .= $this->getSpaces() . '<' . $element->getTag();
 		}
@@ -37,31 +38,35 @@ class ElementNode extends HamlNode
 			$output .= '<' . $element->getTag();
 		}
 		
-		if ($element->useAttsHelper())
+		if($element->useAttsHelper())
 		{
 			$output .= ' <?php atts(array(';
-			if (($atts = $element->getAttributes()) != null)
+			if(($atts = $element->getAttributes()) != null)
 			{
-				if (isset($atts['id'])) {
-					$output .= "'id' => " . $this->_renderArrayValue($atts['id'], '_', 'php').', ';
+				if(isset($atts['id']))
+				{
+					$output .= "'id' => " . $this->_renderArrayValue($atts['id'], '_', 'php') . ', ';
 					unset($atts['id']);
 				}
 				
-				if (isset($atts['class'])) {
-					$output .= "'class' => " . $this->_renderArrayValue($atts['class'], ' ', 'php').', ';
+				if(isset($atts['class']))
+				{
+					$output .= "'class' => " . $this->_renderArrayValue($atts['class'], ' ', 'php') . ', ';
 					unset($atts['class']);
 				}
 				
-				foreach ($atts as $name => $att)
+				foreach($atts as $name => $att)
 				{
 					$output .= "";
-					switch ($att['t'])
+					switch($att['t'])
 					{
 						case 'str':
-							$output .= "'$name' => {$att['v']}, ";
+							$interpolation = new Interpolation($att['v'], true);
+							$att_value = $interpolation->render();
+							$output .= "'$name' => $att_value, ";
 							continue;
 						case 'php':
-							if (is_array($att['v']))
+							if(is_array($att['v']))
 								$output .= "'$name' => array(" . join(',', $att['v']) . ')';
 							else
 								$output .= "'$name' => {$att['v']}, ";
@@ -82,21 +87,23 @@ class ElementNode extends HamlNode
 		}
 		else
 		{
-			if (($atts = $element->getAttributes()) !== null)
+			if(($atts = $element->getAttributes()) !== null)
 			{
-				if (isset($atts['id'])) {
-					$output .= ' id="'.$this->_renderArrayValue($atts['id'], '_', 'txt').'"';
+				if(isset($atts['id']))
+				{
+					$output .= ' id="' . $this->_renderArrayValue($atts['id'], '_', 'txt') . '"';
 					unset($atts['id']);
 				}
 				
-				if (isset($atts['class'])) {
-					$output .= ' class="'.$this->_renderArrayValue($atts['class'], ' ', 'txt').'"';
+				if(isset($atts['class']))
+				{
+					$output .= ' class="' . $this->_renderArrayValue($atts['class'], ' ', 'txt') . '"';
 					unset($atts['class']);
 				}
 				
-				foreach ($atts as $name => $att)
+				foreach($atts as $name => $att)
 				{
-					switch ($att['t'])
+					switch($att['t'])
 					{
 						case 'str':
 							$output .= " {$name}={$att['v']}";
@@ -115,15 +122,18 @@ class ElementNode extends HamlNode
 		
 		$interpolation = new Interpolation($output);
 		$output = $interpolation->render();
-                
-                if ($this->_el->isSelfClosing()) {
-                    $output .= ' />';
-                } else {
-                    // render inline content
-                    $content = $this->renderTagContent($element->getInlineContent());
-                    $output .= '>' . $content . '</' . $element->getTag() . '>';
-                }
-                
+		
+		if($this->_el->isSelfClosing())
+		{
+			$output .= ' />';
+		}
+		else
+		{
+			// render inline content
+			$content = $this->renderTagContent($element->getInlineContent());
+			$output .= '>' . $content . '</' . $element->getTag() . '>';
+		}
+		
 		return $output . "\n";
 	}
 
@@ -143,24 +153,48 @@ class ElementNode extends HamlNode
 	 *     
 	 *   _renderArrayValue(array(
 	 *     array('t' => 'str', 'v' => 'a',
-	 *     array('t' => 'php', 'v' => '$b'));			# -> <?php echo 'a_'.$b; ?>
-	 *     
-	 *   _renderArrayValue(array(
-	 *     array('t' => 'str', 'v' => 'a',
-	 *     array('t' => 'php', 'v' => '$b'), 'php');	# -> 'a_'.$b
+	 *     array('t' => 'php', 'v' => '$b'));			# -> <?php/**
+	 * Joins the string $parts together using $separator but format the return
+	 * according to context.
+	 * This method concatenates all the parts using $separtor as glue. If the
+	 * context is 'txt'
+	 * and at least one part is php, the returned string will be encapsuled
+	 * inside <?php ... ?>
+	 * If the context is 'php' the string returned will be a valid php code.
+	 * @code
+	 * _renderArrayValue(array(
+	 * array('t' => 'str', 'v' => 'a',
+	 * array('t' => 'str', 'v' => 'b'));			# -> a_b
+	 *
+	 * _renderArrayValue(array(
+	 * array('t' => 'str', 'v' => 'a',
+	 * array('t' => 'str', 'v' => 'b'), 'php');	# -> 'a_b'
+	 *
+	 * _renderArrayValue(array(
+	 * array('t' => 'str', 'v' => 'a',
+	 * array('t' => 'php', 'v' => '$b'));			# -> <?php echo 'a_'.$b; ?>
+	 *
+	 * _renderArrayValue(array(
+	 * array('t' => 'str', 'v' => 'a',
+	 * array('t' => 'php', 'v' => '$b'), 'php');	# -> 'a_'.$b
 	 * @endcode
-	 * 
-	 * @param $arr_parts The components of the id
-	 * @param $context The context into which the value will be inserted. Can be 'txt' (default) or 'php'
+	 *
+	 * @param $arr_parts The
+	 *        	components of the id
+	 * @param $context The
+	 *        	context into which the value will be inserted. Can be 'txt'
+	 *        	(default) or 'php'
 	 */
+
+
 	private function _renderArrayValue($parts, $separator = ' ', $context = 'txt')
 	{
 		$hasPhp = false;
 		$values = array();
 		
-		foreach ($parts as $p)
+		foreach($parts as $p)
 		{
-			if ($p['t'] == 'php')
+			if($p['t'] == 'php')
 			{
 				$hasPhp = true;
 				$values[] = $p['v'];
@@ -171,11 +205,10 @@ class ElementNode extends HamlNode
 			}
 		}
 		
-		if (!$hasPhp)
+		if(!$hasPhp)
 		{
 			$quote = '';
-			if ('php' == $context)
-				$quote = "'";
+			if('php' == $context) $quote = "'";
 			
 			$value = '';
 			foreach($parts as $p)
@@ -189,27 +222,26 @@ class ElementNode extends HamlNode
 			$value = str_replace("'.'", $separator, $value);
 			$value = str_replace(".'", ".'$separator", $value);
 			$value = str_replace("'.", "$separator'.", $value);
-				
-			if('txt' == $context)
-				return '<?php echo '.$value.'; ?>';
-				
+			
+			if('txt' == $context) return '<?php echo ' . $value . '; ?>';
+			
 			return $value;
 		}
 	}
 
 	private function renderTagContent($content)
 	{
-		if ($this->hasChildren())
+		if($this->hasChildren())
 		{
 			$content = "\n" . $this->renderChildren() . $this->getSpaces();
 		}
 		
-		if ($content === null)
+		if($content === null)
 		{
 			$content = '';
 		}
 		
-		if ($this->_phpVariable)
+		if($this->_phpVariable)
 		{
 			$content = "<?php echo " . $content . " ?>";
 		}

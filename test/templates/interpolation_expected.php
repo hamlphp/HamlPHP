@@ -12,7 +12,7 @@
       </p>
       <p><?php echo 'hello world'; ?></p>
       <p>
-        <!-- <?php echo 'hello'; ?> -->
+        <!--<?php echo 'hello'; ?>-->
       </p>
     </div>
   </body>
