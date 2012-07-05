@@ -2,7 +2,7 @@
 
 Yet another Haml to HTML converter written in PHP.
 
-Check the [Wiki](wiki) we've been adding some docs.
+Check the [Wiki](https://github.com/hamlphp/HamlPHP/wiki) we've been adding some docs.
 
 ## Requirements
 
