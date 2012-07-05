@@ -67,7 +67,13 @@ class Compiler
 			}
 			catch(Exception $e)
 			{
-				$line = isset($rawLines[$this->_currLine]) ? $rawLines[$this->_currLine] : isset($rawLines[$this->_currLine-1]) ? $rawLines[$this->_currLine-1] : "UNKNOWN";
+				$line = "UNKNOWN (sorry!)";
+				
+				if(isset($rawLines[$this->_currLine]))
+					$line = isset($rawLines[$this->_currLine]);
+				else if(isset($rawLines[$this->_currLine-1]))
+					$line = $rawLines[$this->_currLine-1];
+				
 				throw new SyntaxErrorException("Error parsing line:\n{$line}\n" . $e->getMessage(), $e->getCode());
 			}
 		}

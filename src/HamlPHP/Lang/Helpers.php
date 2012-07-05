@@ -43,7 +43,8 @@ function atts($atts, $echo=true)
 		{
 			foreach($value as $k => $v)
 			{
-				// TODO: if we found an Id or a Class attribute here. What should we do? For now, it will replace the original ones instead of append
+				// TODO: if we find an Id or a Class attribute here. What should we do? 
+				// For now, it will replace the original ones instead of append
 				$flatten[$k] = $v;	
 			}
 			unset($atts[$name]);
@@ -75,9 +76,9 @@ function atts($atts, $echo=true)
 	}
 	
 	if($echo)
-		echo $str;
+		echo trim($str);
 	
-	return $str;
+	return trim($str);
 }
 
 /**
@@ -123,8 +124,10 @@ function id_for($obj, $prefix = '')
  */
 function class_for($obj, $prefix = '')
 {
-	if(!empty($prefix))
-		$prefix .= ' ';
+	if(!empty($prefix)) {
+		$prefix = ltrim($prefix, ':');
+		$prefix .= '_';
+	}
 		
 	if(method_exists($obj, 'haml_obj_ref'))
 		return $prefix.$obj->haml_obj_ref();
@@ -132,5 +135,5 @@ function class_for($obj, $prefix = '')
 	if(method_exists($obj, 'hamlObjRef'))
 		return $prefix.$obj->hamlObjRef();
 	
-	return $prefix.get_class($obj);
+	return $prefix.s(get_class($obj))->underscorize();
 }

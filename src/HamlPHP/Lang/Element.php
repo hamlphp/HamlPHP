@@ -178,8 +178,11 @@ class Element
 	{
 		foreach ($att_arr as $att)
 		{
-			if (isset($att['t']) && ($att['t'] == 'php' || $att['t'] == 'function'))
+			if(isset($att[0]))
 				return true;
+			
+			if (isset($att['t']) && ($att['t'] == 'php' || $att['t'] == 'function'))
+				return true;				
 		}
 
 		return false;
@@ -232,20 +235,25 @@ class Element
 
 		$obj = $scanner->scan('/[^,\\]]+/');
 		$scanner->scan('/\s*,\s*/');
+		
 		$prefix = $scanner->scan('/[^\\]]*/');
-		if (! $prefix)
+		
+		if (!$prefix)
 			$prefix = '';
+		else
+			$prefix = ", '".ltrim($prefix, ':')."'";
+		
 		$end = trim($scanner->scan('/\s*\\]/'));
 
 		if ($end != ']')
 			throw new SyntaxErrorException("Invalid object reference.");
-
+		
 		return array(
 			'id' => array(array(
-				't' => 'php' , 'v' => "id_for($obj, '$prefix')"
+				't' => 'php' , 'v' => "id_for({$obj}{$prefix})"
 			)),
 			'class' => array(array(
-				't' => 'php' , 'v' => "class_for($obj, '$prefix')"
+				't' => 'php' , 'v' => "class_for({$obj}{$prefix})"
 			))
 		);
 	}
@@ -440,9 +448,8 @@ class Element
 						);
 					break;
 
-				case '{':
-					list ($balanced, $value, $rest, $count) = $this->balance($scanner, '{', '}', 0);
-					$value = mb_substr($value, 1, - 1);
+				case '$':
+					$value = $scanner->scanUntil('/(?=[,\\}])/');
 
 					if($name == 'class' || $name == 'id')
 						$atts[$name][] =  array(
@@ -450,10 +457,34 @@ class Element
 						);
 					else
 						$atts[$name] = array(
-							't' => 'php' , 'v' => $value
+							't' => 'str' , 'v' => '"#{'.$value.'}"'
 						);
 					break;
 
+				case '{':
+					list ($balanced, $value, $rest, $count) = $this->balance($scanner, '{', '}', 0);
+					
+					if($name == 'data')
+					{
+						$data_arr = $this->_parseHashAttrs(new StringScanner($value));
+						foreach($data_arr as $key => $val)
+							$atts["data-$key"] = $val;
+					}
+					else 
+					{
+						$value = mb_substr($value, 1, - 1);
+	
+						if($name == 'class' || $name == 'id')
+							$atts[$name][] =  array(
+								't' => 'php' , 'v' => $value
+							);
+						else
+							$atts[$name] = array(
+								't' => 'php' , 'v' => $value
+							);
+					}
+					break;
+					
 				default:
 					if ($scanner->scan('/true|false/i'))
 					{
@@ -476,12 +507,12 @@ class Element
 							);
 						else
 							$atts[$name] = array(
-								't' => 'php' , 'v' => $value
+								't' => 'str' , 'v' => $value
 							);
 					}
 			}
 
-			$scanner->scan('/\s*(,)\s*/');
+			$scanner->scan('/\s*,?\s*/');
 			if ($scanner->eos)
 			{
 				$next_line = ' ' . trim($this->_compiler->getNextLine());
@@ -551,6 +582,7 @@ class Element
 		$s = new StringScanner($str);
 		
 		$quote = $s->check(StringScanner::rQUOTE);
+		
 		// If it doesn't starts with a quote, it CAN'T be inside php context
 		if (empty($quote) || !s($str)->endsWith($quote))
 		{
@@ -560,32 +592,6 @@ class Element
 		
 		$int = new Interpolation($str, true);
 		return $int->render();
-		
-/*
-		$quote = $s->scan('/["\']/');
-
-		while (! $s->eos)
-		{
-			$part = $s->scan('/([^\\\\]*)\\#\\{/');
-
-			if (! $part)
-				break;
-
-			$nStr = $s[1] . $quote . '.(';
-
-			$part = $s->scan('/([^\\\\]*)\\}/');
-
-			if (! $part)
-				throw new SyntaxErrorException("Unclosed interpolation");
-
-			$nStr .= $s[1] . ').' . $quote;
-		}
-
-		if ($s->rest == $quote)
-			return $quote . trim($nStr, ". {$quote}");
-
-		return $quote . $nStr . $s->rest;
-		*/
 	}
 
 	public function getTag()
