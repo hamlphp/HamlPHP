@@ -2,38 +2,73 @@
 
 Yet another Haml to HTML converter written in PHP.
 
+Check the [Wiki](https://github.com/hamlphp/HamlPHP/wiki) we've been adding some docs.
+
 ## Requirements
 
 PHP 5.2 or newer.
 
 ## Usage
 
+The simplest way to use HamlPHP is to manually. You can use mod_rewrite to redirect all your requests to index.php and render the .haml files from there. We'll add this example later. HamlPHP will cache compilation results, so the .haml file is only compiled to php once.
+
 index.haml
 
-    !!! 5
-    %html
-        %body
-            #container
-                %ul.navigation
-                    %li Etusivu
-                    %li Tuotteet
-                
-                %h2 Tuotteet
-                %ul.products 
-                    %li= 1 * 6
-                    - for ($i = 0; $i < 10; $i++)
-                        %li= $i + 3
+```haml
+!!! 5
+%html
+    %body
+        #container
+            %ul.navigation
+                %li Etusivu
+                %li Tuotteet
+
+            %h2 Tuotteet
+            %ul.products
+                - for ($i = 0; $i < 10; $i++)
+                    %li= $i * 7
+```
 
 In your index.php
 
-    <?php
+```php
+<?php
+require_once 'src/HamlPHP/HamlPHP.php';
+require_once 'src/HamlPHP/Storage/FileStorage.php';
 
-    require_once 'src/HamlPHP/HamlPHP.php';
-    require_once 'src/HamlPHP/Storage/FileStorage.php';
+// Make sure that a directory _tmp_ exists in your application and it is writable.
+$parser = new HamlPHP(new FileStorage(dirname(__FILE__) . '/tmp/'));
 
-    // Make sure that a directory _tmp_ exists in your application and it is writable.
-    $parser = new HamlPHP(new FileStorage(dirname(__FILE__) . '/tmp/'));
+$content = $parser->parseFile('index.haml');
 
-    $content = $parser->parseFile('index.haml');
+echo $content;
+```
 
-    echo $content;
+The compilation result will look like this:
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="container">
+      <ul class="navigation">
+        <li>Etusivu</li>
+        <li>Tuotteet</li>
+      </ul>
+      <h2>Tuotteet</h2>
+      <ul class="products">
+        <li>0</li>
+        <li>7</li>
+        <li>14</li>
+        <li>21</li>
+        <li>28</li>
+        <li>35</li>
+        <li>42</li>
+        <li>49</li>
+        <li>56</li>
+        <li>63</li>
+      </ul>
+    </div>
+  </body>
+</html>
+```
