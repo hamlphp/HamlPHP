@@ -1,6 +1,6 @@
 <?php
 
-interface Storage
+interface IStorage
 {
   /**
    * Returns true if content is fresh and false if content should be cached.
@@ -8,7 +8,7 @@ interface Storage
   public function isFresh($id);
 
   /**
-   * Cache contents of a file.
+   * Cache contents and index it under the specified id.
    */
   public function cache($id, $content);
 
@@ -21,4 +21,11 @@ interface Storage
    * Remove cached content.
    */
   public function remove($id);
+  
+  /**
+   * The content to generate the id for.
+   * 
+   * @param string $content
+   */
+  public function generateContentId($content);
 }

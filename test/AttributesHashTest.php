@@ -1,18 +1,9 @@
 <?php
 
-require_once 'test_helper.php';
-require_once HAMLPHP_ROOT . 'ContentEvaluator/DefaultContentEvaluator.php';
+require_once 'BaseTestCase.php';
 
-class AttributesHashTest extends PHPUnit_Framework_TestCase
+class AttributesHashTest extends BaseTestCase
 {
-	protected $compiler = null;
-	protected $evaluator = null;
-
-	public function setUp() {
-		$this->compiler = getTestCompiler();
-		$this->evaluator = new DefaultContentEvaluator();
-	}
-
 	/**
 	 * @test Hashes can stretched over multiple lines
 	 * 
@@ -28,7 +19,11 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 		)));
 		
 		$expected = '<script type="text/javascript" src="javascripts/script_<?php echo 2 + 7; ?>" />';
-		$this->assertEquals($expected, $actual);
+		
+		$actual = $this->evaluator->evaluate($actual);
+		$expected = $this->evaluator->evaluate($expected);
+		
+		$this->compareXmlStrings($expected, $actual);
 	}
 	
 	/**
@@ -52,11 +47,12 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 		$item->urgency = 'immediate';
 		
 		$actual = trim($this->compiler->parseString('%div{:id => [$item->type, $item->number], :class => [$item->type, $item->urgency]}'));
-		$expected = "<div <?php atts(array('id' => array(\$item->type, \$item->number), 'class' => array(\$item->type, \$item->urgency))); ?>></div>";
-		$this->assertEquals($expected, $actual);
+		$expected = '<div id="ItemType_4" class="ItemType immediate"></div>';
 
-		$output = $this->evaluator->evaluate($expected, array('item' => $item));
-		$this->assertEquals('<div id="ItemType_4 class="ItemType immediate></div>', $output);
+		$actual = $this->evaluator->evaluate($actual, array('item' => $item));
+		$expected = $this->evaluator->evaluate($expected, array('item' => $item));
+		
+		$this->compareXmlStrings($expected, $actual);
 	}
 	
 	/**
@@ -86,13 +82,11 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 	public function Attribute_list_can_be_replaced_by_a_function()
 	{		
 		$actual = $this->compiler->parseString('%sandwich{hash1(), hash2(), delicious => true}/');
+
+		$actual = $this->evaluator->evaluate($actual);
+		$expected = '<sandwich delicious="delicious" bread="whole wheat" filling="peanut butter and jelly" />';
 		
-		$expected = "<sandwich <?php atts(array(hash1(), hash2(), 'delicious' => 'delicious')); ?> />";
-		
-		$evaluated = $this->evaluator->evaluate($expected);
-		$this->assertEquals(
-			'<sandwich delicious="delicious" bread="whole wheat" filling="peanut butter and jelly" />', 
-			$evaluated);
+		$this->compareXmlStrings($expected, $actual);
 	}
 	
 	/**
@@ -101,7 +95,12 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 	public function Attribute_value_allows_interpolation()
 	{
 		$actual = trim($this->compiler->parseString('%p{title => "I have a #{$adjective} title"}'));
-		$this->assertEquals('<p title="I have a <?php echo $adjective; ?>title"></p>', $actual);
+		$expected = '<p title="I have a <?php echo $adjective; ?>title"></p>';
+
+		$actual = $this->evaluator->evaluate($actual, array('adjective' => 'nice'));
+		$expected = $this->evaluator->evaluate($expected, array('adjective' => 'nice'));
+		
+		$this->compareXmlStrings($expected, $actual);
 	}
 	
 	/**
@@ -110,13 +109,28 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 	public function Attribute_value_allows_expression()
 	{
 		$actual = trim($this->compiler->parseString('%p{title => {"I have a $adjective title"}}'));
-		$this->assertEquals('<p <?php atts(array(\'title\' => "I have a $adjective title")); ?>></p>', $actual);
+		$expected = '<p <?php atts(array(\'title\' => "I have a $adjective title")); ?>></p>';
+
+		$actual = $this->evaluator->evaluate($actual, array('adjective' => 'nice'));
+		$expected = $this->evaluator->evaluate($expected, array('adjective' => 'nice'));
+		
+		$this->compareXmlStrings($expected, $actual);
 		
 		$actual = trim($this->compiler->parseString('%p{title => {"I have a " . $adjective . " title"}}'));
-		$this->assertEquals('<p <?php atts(array(\'title\' => "I have a " . $adjective . " title")); ?>></p>', $actual);
+		$expected = '<p <?php atts(array(\'title\' => "I have a " . $adjective . " title")); ?>></p>';
+
+		$actual = $this->evaluator->evaluate($actual, array('adjective' => 'nice'));
+		$expected = $this->evaluator->evaluate($expected, array('adjective' => 'nice'));
+		
+		$this->compareXmlStrings($expected, $actual);
 		
 		$actual = trim($this->compiler->parseString("%p{title => {youCanDo('anything') + 'here'}}"));
-		$this->assertEquals('<p <?php atts(array(\'title\' => youCanDo(\'anything\') + \'here\')); ?>></p>', $actual);
+		$expected = '<p <?php atts(array(\'title\' => youCanDo(\'anything\') + \'here\')); ?>></p>';
+
+		$actual = $this->evaluator->evaluate($actual);
+		$expected = $this->evaluator->evaluate($expected);
+		
+		$this->compareXmlStrings($expected, $actual);
 	}
 	
 	/**
@@ -125,7 +139,12 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 	public function Attribute_value_allows_literals()
 	{
 		$actual = trim($this->compiler->parseString('%button{disabled => true}'));
-		$this->assertEquals('<button disabled="disabled"></button>', $actual);
+		$expected = '<button disabled="disabled"></button>';
+
+		$actual = $this->evaluator->evaluate($actual);
+		$expected = $this->evaluator->evaluate($expected);
+		
+		$this->compareXmlStrings($expected, $actual);
 	}
 	
 	/**
@@ -133,10 +152,24 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 	 */
 	public function Attribute_value_allows_variables()
 	{
+		$user = new stdClass();
+		$user->name = 'Chuck Norris';
+		
 		$actual = trim($this->compiler->parseString('%button{disabled => $disabled}'));
-		$this->assertEquals('<button disabled="<?php echo $disabled; ?>"></button>', $actual);
+		$expected = '<button disabled="<?php echo $disabled; ?>"></button>';
+
+		$actual = $this->evaluator->evaluate($actual, array('disabled' => true));
+		$expected = $this->evaluator->evaluate($expected, array('disabled' => true));
+		
+		$this->compareXmlStrings($expected, $actual);
+		
 		$actual = trim($this->compiler->parseString('%input{value => $user->name, name => "name"}'));
-		$this->assertEquals('<input value="<?php echo $user->name; ?>" name="name"></input>', $actual);
+		$expected = '<input value="<?php echo $user->name; ?>" name="name"></input>';
+
+		$actual = $this->evaluator->evaluate($actual, array('user' => $user));
+		$expected = $this->evaluator->evaluate($expected, array('user' => $user));
+		
+		$this->compareXmlStrings($expected, $actual);
 		
 	}
 	
@@ -152,13 +185,19 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 		$actual = trim($this->compiler->parseString('#stdClass.panel{ :id => $user->id }'));
 		$expected = "<div <?php atts(array('id' => 'stdClass_'.\$user->id , 'class' => 'panel')); ?>></div>";
 
-		$this->assertEquals($expected, $actual, "Compilation failed.");
+		$actual = $this->evaluator->evaluate($actual, array('user' => $user));
+		$expected = $this->evaluator->evaluate($expected, array('user' => $user));
+		
+		$this->compareXmlStrings($expected, $actual);
 		
 		// evaluation
 		$evaluated = trim($this->evaluator->evaluate($actual, array('user' => $user)));
 		$output = '<div id="stdClass_1234" class="panel"></div>';
+
+		$actual = $this->evaluator->evaluate($actual, array('user' => $user));
+		$expected = $this->evaluator->evaluate($expected, array('user' => $user));
 		
-		$this->assertEquals($output, $evaluated, "Evaluation Failed.");
+		$this->compareXmlStrings($expected, $actual);
 	}
 	
 	/**
@@ -169,17 +208,12 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 		$user = new stdClass();
 		$user->id = 1234;
 		
-		// compilation
 		$actual = trim($this->compiler->parseString('.panel{ :class => class_for($user) }'));
-		$expected = "<div <?php atts(array('class' => 'panel '.class_for(\$user))); ?>></div>";
-
-		$this->assertEquals($expected, $actual, "Compilation failed.");
+				
+		$actual = $this->evaluator->evaluate($actual, array('user' => $user));
+		$expected = '<div class="panel std_class"></div>';
 		
-		// evaluation
-		$evaluated = trim($this->evaluator->evaluate($actual, array('user' => $user)));
-		$output = '<div class="panel stdClass"></div>';
-		
-		$this->assertEquals($output, $evaluated, "Evaluation Failed.");
+		$this->compareXmlStrings($expected, $actual);
 	}
 	
 	/**
@@ -198,9 +232,17 @@ class AttributesHashTest extends PHPUnit_Framework_TestCase
 	{
 		$actual = trim($this->compiler->parseString('%a{:href=>"/posts", :data => {author_id => "123"} } Posts By Author'));
 		$expected = '<a href="/posts" data-author_id="123">Posts By Author</a>';
+
+		$actual = $this->evaluator->evaluate($actual);
+		$expected = $this->evaluator->evaluate($expected);
 		
-		$this->assertEquals($expected, $actual, "Compilation failed.");
+		$this->compareXmlStrings($expected, $actual);
 	}
+}
+
+function youCanDo($action)
+{
+	return "You can do $action";
 }
 
 function hash1() {

@@ -1,8 +1,8 @@
 <?php
 
-require_once 'Filter.php';
+require_once 'IFilter.php';
 
-class PlainFilter implements Filter
+class PlainFilter implements IFilter
 {
   public function getIdentifier()
   {

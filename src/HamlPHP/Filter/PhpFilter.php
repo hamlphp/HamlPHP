@@ -1,6 +1,8 @@
 <?php
 
-class PhpFilter implements Filter
+require_once 'IFilter.php';
+
+class PhpFilter implements IFilter
 {
   public function getIdentifier()
   {

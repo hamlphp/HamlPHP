@@ -1,6 +1,6 @@
 <?php
 
-interface Filter
+interface IFilter
 {
   /**
    * Returns an identifier of this filter.

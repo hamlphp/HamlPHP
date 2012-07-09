@@ -14,6 +14,7 @@ class TagNode extends HamlNode
     'for' => 'endfor',
     'if' => 'endif',
     'else if' => 'endif',
+    'elseif' => 'endif',
     'else' => 'endif',
     'while' => 'endwhile',
     'foreach' => 'endforeach',

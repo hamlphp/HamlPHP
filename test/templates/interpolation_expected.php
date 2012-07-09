@@ -11,9 +11,6 @@
         this line has interpolation <?php echo 'hello world'; ?>.
       </p>
       <p><?php echo 'hello world'; ?></p>
-      <p>
-        <!--<?php echo 'hello'; ?>-->
-      </p>
     </div>
   </body>
 </html>

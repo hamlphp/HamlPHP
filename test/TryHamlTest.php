@@ -1,19 +1,17 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
 
-class TryHamlTest extends PHPUnit_Framework_TestCase
+class TryHamlTest extends BaseTestCase
 {
-  protected $compiler = null;
-
-  public function __construct()
-  {
-    $this->compiler = getTestCompiler();
-  }
-
   public function testForLoop()
   {
-    $actual = $this->compiler->parseFile(template_path('try'));
-    $this->assertEquals(expected_result('try'), $actual);
+    $actual = $this->compiler->parseFile( $this->getTemplatePath('try'));
+    $expected = $this->getExpectedResult('try');
+
+    $actual = $this->evaluator->evaluate($actual);
+    $expected = $this->evaluator->evaluate($expected);
+    
+    $this->compareXmlStrings($expected, $actual);
   }
 }

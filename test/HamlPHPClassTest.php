@@ -1,41 +1,12 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
 
 /**
  * test case.
  */
-class HamlPHPClassTest extends PHPUnit_Framework_TestCase
+class HamlPHPClassTest extends BaseTestCase
 {
-
-	/**
-	 * Prepares the environment before running a test.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->compiler = getTestCompiler();	
-	}
-
-	/**
-	 * Cleans up the environment after running a test.
-	 */
-	protected function tearDown()
-	{
-		// TODO Auto-generated TestNormalUse::tearDown()
-		
-		parent::tearDown();
-	}
-
-	/**
-	 * Constructs the test case.
-	 */
-	public function __construct()
-	{
-		// TODO Auto-generated constructor
-	}
-	
 	public function testReadmeExample()
 	{
 		require_once HAMLPHP_ROOT . 'HamlPHP.php';
@@ -43,11 +14,14 @@ class HamlPHPClassTest extends PHPUnit_Framework_TestCase
 		
 		// Make sure that a directory _tmp_ exists in your application and it is writable.
 		$parser = new HamlPHP(new FileStorage(TEST_TMP_DIR));
+
+		$actual = $parser->parseFile($this->getTemplatePath('readme_example'));
+		$expected = $this->getExpectedResult('readme_example');
 		
-		$expected = contents(template('readme_example.php'));
-		$actual = $parser->parseFile(template_path('readme_example'));
+		$actual = $this->evaluator->evaluate($actual);
+		$expected = $this->evaluator->evaluate($expected);
 		
-		$this->assertEquals($expected, $actual);
+		$this->compareXmlStrings($expected, $actual);
 	}
 
 }

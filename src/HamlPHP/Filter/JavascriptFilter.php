@@ -1,6 +1,8 @@
 <?php
 
-class JavascriptFilter implements Filter
+require_once 'IFilter.php';
+
+class JavascriptFilter implements IFilter
 {
   public function getIdentifier()
   {

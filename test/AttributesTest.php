@@ -1,35 +1,48 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
 
-class AttributesTest extends PHPUnit_Framework_TestCase
+class AttributesTest extends BaseTestCase
 {
-	protected $compiler = null;
-
-	public function __construct()
-	{
-		$this->compiler = getTestCompiler();
-	}
-
 	public function testAttributeFunction()
 	{
-		$tests = array(
-			'%p{p_atts()}' => '<p <?php atts(array(p_atts())); ?>></p>',
-			'.user{user_atts($userId)}' => "<div <?php atts(array('class' => 'user', user_atts(\$userId))); ?>></div>",
-			'.user.teatcher{user_atts($userId), teatcher_atts($userId, $viewerId)}' => "<div <?php atts(array('class' => 'user teatcher', user_atts(\$userId), teatcher_atts(\$userId, \$viewerId))); ?>></div>"
-		);
+		// test 1
+		$actual = trim($this->compiler->parseString('%p{p_atts()}'));
+		$expected = '<p <?php atts(array(p_atts())); ?>></p>';
 		
-		while(list($haml, $html) = each($tests))
-		{
-			$result = trim($this->compiler->parseString($haml));
-			$this->assertEquals($html, $result, "Failed for: $haml. Expecting: $html | Got: $result");
-		}
+		$actual = $this->evaluator->evaluate($actual);
+		$expected = $this->evaluator->evaluate($expected);
+
+		$this->compareXmlStrings($expected, $actual);
+
+		// test 2
+		$actual = trim($this->compiler->parseString('.user{user_atts($userId)}'));
+		$expected = "<div <?php atts(array('class' => 'user', user_atts(\$userId))); ?>></div>";
+		
+		$actual = $this->evaluator->evaluate($actual, array('userId' => 123));
+		$expected = $this->evaluator->evaluate($expected, array('userId' => 123));
+
+		$this->compareXmlStrings($expected, $actual);
+
+		// test 3
+		$actual = trim($this->compiler->parseString('.user.teatcher{user_atts($userId), teatcher_atts($userId, $viewerId)}'));
+		$expected = "<div <?php atts(array('class' => 'user teatcher', user_atts(\$userId), teatcher_atts(\$userId, \$viewerId))); ?>></div>";
+		
+		$actual = $this->evaluator->evaluate($actual, array('userId' => 123, 'viewerId' => 456));
+		$expected = $this->evaluator->evaluate($expected, array('userId' => 123, 'viewerId' => 456));
+
+		$this->compareXmlStrings($expected, $actual);
 	}
 
 	public function testAttributes()
 	{
-		$actual = $this->compiler->parseFile(template_path('attributes'));
-		$this->assertEquals(expected_result('attributes'), $actual);
+		$actual = $this->compiler->parseFile($this->getTemplatePath('attributes'));
+		$expected = $this->getExpectedResult('attributes');
+
+		$actual = $this->evaluator->evaluate($actual, array('item_here' => 'item here', 'complex' => 'complex', 'multiline' => 'multiline'));
+		$expected = $this->evaluator->evaluate($expected, array('item_here' => 'item here', 'complex' => 'complex', 'multiline' => 'multiline'));
+		
+		$this->compareXmlStrings($expected, $actual);
 	}
 
 	public function testHtmlAttributes()
@@ -141,6 +154,9 @@ class AttributesTest extends PHPUnit_Framework_TestCase
 
 	public function testClassAndId()
 	{
+		$user = new stdClass();
+		$user->id = 123;
+		
 		$tests = array(
 			'.fancy[$user]' => '<div id="<?php echo id_for($user, \'\'); ?>" class="<?php echo \'fancy \'.class_for($user, \'\'); ?>"></div>',
 			'.fancy[$user, old]' => '<div id="<?php echo id_for($user, \'old\'); ?>" class="<?php echo \'fancy \'.class_for($user, \'old\'); ?>"></div>',
@@ -155,8 +171,12 @@ class AttributesTest extends PHPUnit_Framework_TestCase
 		
 		while(list($haml, $html) = each($tests))
 		{
-			$result = trim($this->compiler->parseString($haml));
-			$this->assertEquals($html, $result, "Failed for: $haml. Expecting: $html | Got: $result");
+			$actual = trim($this->compiler->parseString($haml));
+
+			$actual = $this->evaluator->evaluate($actual, array('user' => $user));
+			$expected = $this->evaluator->evaluate($html, array('user' => $user));
+			
+			$this->compareXmlStrings($expected, $actual);
 		}
 	}
 
@@ -197,4 +217,19 @@ class AttributesTest extends PHPUnit_Framework_TestCase
 		$html = trim($this->compiler->parseString('%script(type = "text/javascript" src = "#{url::site(\'files/js/html5.js\')}")'));
 		$this->assertEquals('<script type="text/javascript" src="<?php echo url::site(\'files/js/html5.js\'); ?>"></script>', $html);
 	}
+}
+
+function p_atts()
+{
+	return array('lang' => 'en');
+}
+
+function user_atts($userId)
+{
+	return array('data-id' => $userId);
+}
+
+function teatcher_atts($userId, $viewerId)
+{
+	return array('data-grade' => '7th');
 }

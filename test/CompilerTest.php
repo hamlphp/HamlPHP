@@ -1,21 +1,9 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
 
-class CompilerTest extends PHPUnit_Framework_TestCase
+class CompilerTest extends BaseTestCase
 {
-  /**
-   * Instance of a compiler.
-   *
-   * @var Compiler
-   */
-  protected $compiler = null;
-
-  public function setUp()
-  {
-    $this->compiler = getTestCompiler();
-  }
-
   public function testCompilingFromString()
   {
     $content = "%html\n  %p Hello world";
@@ -26,13 +14,18 @@ class CompilerTest extends PHPUnit_Framework_TestCase
 
   public function testInlinePhp()
   {
-  	$html = $this->compiler->parseFile(template_path('inlinephp'));
-  	$this->assertEquals(expected_result('inlinephp'), $html);
+  	$actual = $this->compiler->parseFile( $this->getTemplatePath('inlinephp'));
+  	$expected = $this->getExpectedResult('inlinephp');
+  	
+  	$actual = $this->evaluator->evaluate($actual);
+  	$expected = $this->evaluator->evaluate($expected);
+  	
+  	$this->compareXmlStrings($expected, $actual);
   }
   
   public function testCompilingFromFile()
   {
-    $html = $this->compiler->parseFile(template_path('test'));
-    $this->assertEquals(expected_result('test'), $html);
+    $html = $this->compiler->parseFile( $this->getTemplatePath('test'));
+    $this->assertEquals( $this->getExpectedResult('test'), $html);
   }
 }

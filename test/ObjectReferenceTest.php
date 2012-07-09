@@ -1,7 +1,7 @@
 <?php
 
-require_once 'test_helper.php';
-require_once HAMLPHP_ROOT . 'ContentEvaluator/DefaultContentEvaluator.php';
+require_once 'BaseTestCase.php';
+require_once HAMLPHP_ROOT . 'ContentEvaluator/ContentEvaluator.php';
 
 /**
  * test case
@@ -15,17 +15,8 @@ require_once HAMLPHP_ROOT . 'ContentEvaluator/DefaultContentEvaluator.php';
  * Additionally, the second argument (if present) will be used as a prefix for 
  * both the id and class attributes.
  */
-class ObjectReferenceTest extends PHPUnit_Framework_TestCase
+class ObjectReferenceTest extends BaseTestCase
 {
-	protected $compiler = null;
-	protected $evaluator = null;
-
-	public function setUp() {
-		$this->compiler = getTestCompiler();
-		$this->evaluator = new DefaultContentEvaluator();
-	}
-	
-
 	/**
 	 * @test
 	 * 

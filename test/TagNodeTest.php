@@ -1,25 +1,29 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
 
-class TagNodeTest extends PHPUnit_Framework_TestCase
+class TagNodeTest extends BaseTestCase
 {
-  protected $compiler = null;
-
-  public function __construct()
-  {
-    $this->compiler = getTestCompiler();
-  }
-
   public function testForLoop()
   {
-    $actual = $this->compiler->parseFile(template_path('forloop'));
-    $this->assertEquals(expected_result('forloop'), $actual);
+    $actual = $this->compiler->parseFile( $this->getTemplatePath('forloop'));
+   	$expected = $this->getExpectedResult('forloop');
+
+    $actual = $this->evaluator->evaluate($actual);
+    $expected = $this->evaluator->evaluate($expected);
+    
+    $this->compareXmlStrings($expected, $actual);
   }
 
   public function testConditions()
   {
-    $actual = $this->compiler->parseFile(template_path('conditions'));
-    $this->assertEquals(expected_result('conditions'), $actual);
+    $actual = $this->compiler->parseFile( $this->getTemplatePath('conditions'));
+    $expected = $this->getExpectedResult('conditions');
+
+    echo $actual;
+    $actual = $this->evaluator->evaluate($actual);
+    $expected = $this->evaluator->evaluate($expected);
+    
+    $this->compareXmlStrings($expected, $actual);
   }
 }

@@ -1,21 +1,36 @@
 <?php
 
-require_once 'test_helper.php';
-require_once '../src/HamlPHP/Lang/Interpolation.php';
+require_once 'BaseTestCase.php';
+require_once HAMLPHP_ROOT . '/Lang/Interpolation.php';
 
-class InterpolationTest extends PHPUnit_Framework_TestCase
+class InterpolationTest extends BaseTestCase
 {
-	protected $compiler = null;
-
-	public function __construct()
-	{
-		$this->compiler = getTestCompiler();
-	}
-
 	public function testInterpolationTemplate()
 	{
-		$actual = $this->compiler->parseFile(template_path('interpolation'));
-		$this->assertEquals(expected_result('interpolation'), $actual);
+		$actual = $this->compiler->parseFile( $this->getTemplatePath('interpolation'));
+		$expected = $this->getExpectedResult('interpolation');
+
+	    $actual = $this->evaluator->evaluate($actual);
+	    $expected = $this->evaluator->evaluate($expected);
+	    
+	    $this->compareXmlStrings($expected, $actual);
+	}
+	
+	public function Should_work_inside_comments()
+	{
+		$haml = <<<END
+%p
+  / #{ 'this should be inside PHP' }
+END;
+		$expected = <<<END
+<p>
+  <!-- <?php echo 'this should be inside PHP'; ?> -->
+</p>
+END;
+		
+		$actual = $this->compiler->parseString($haml);
+		
+		$this->assertEquals($expected, $actual);
 	}
 
 	public function testInterpolation()

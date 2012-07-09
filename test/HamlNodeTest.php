@@ -1,9 +1,9 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
 require_once HAMLPHP_ROOT.'Lang/Nodes/HamlNode.php';
 
-class HamlNodeTest extends PHPUnit_Framework_TestCase
+class HamlNodeTest extends BaseTestCase
 {
   public function testSetPositiveIndentationLevel()
   {

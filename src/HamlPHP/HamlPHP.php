@@ -1,23 +1,45 @@
 <?php
 
 require_once 'Config.php';
-require_once 'Storage/Storage.php';
+require_once 'Storage/IStorage.php';
 require_once 'Compiler.php';
 
 class HamlPHP
 {
+	/**
+	 * @var Compiler
+	 */
 	private $_compiler = null;
+	
+	/**
+	 * @var Storage
+	 */
 	private $_storage = null;
+	
+	/**
+	 * @var NodeFactory
+	 */
 	private $_nodeFactory = null;
+	
+	/**
+	 * @var FilterContainer
+	 */
 	private $_filterContainer = null;
+	
+	/**
+	 * @var bool
+	 */
 	private $_cacheEnabled = true;
 
 	// Placeholder until config gets properly implemented
+	/**
+	 * @var Config
+	 */
 	public static $Config = array(
 		'escape_html' => false
 	);
 
-	public function __construct(Storage $storage)
+	public function __construct(IStorage $storage)
 	{
 		$this->_compiler = $this->getCompiler();
 		$this->_storage = $storage;
@@ -62,8 +84,11 @@ class HamlPHP
 	 */
 	public function setNodeFactory(NodeFactory $factory)
 	{
+		if($factory === null)
+			throw new Exception("Parameter \$factory can not be null");
+		
 		$this->_nodeFactory = $factory;
-		$this->getNodeFactory()->setFilterContainer($this->getFilterContainer());
+		$this->_nodeFactory->setFilterContainer($this->getFilterContainer());
 	}
 
 	/**
@@ -131,45 +156,32 @@ class HamlPHP
 	}
 
 	/**
-	 * Parses a haml file and returns a cached path to the file.
+	 * Parses a haml file and returns the compile result.
 	 *
 	 * @param string $fileName
 	 */
-	public function parseFile($fileName, array $templateVars = array())
+	public function parseFile($fileName)
 	{
-		$content = $this->getContentFromStorage($fileName);
-
-		return $this->evaluate(
-				$content, $templateVars, $this->generateFileId($fileName));
-	}
-
-	/**
-	 * Returns content from a storage
-	 *
-	 * @param string $fileName
-	 * @return string
-	 */
-	public function getContentFromStorage($fileName)
-	{
-		$fileId = $this->generateFileId($fileName);
-
-		if ($this->_storage === null) {
+		if($this->_cacheEnabled)
+		{
+			if ($this->_storage === null) {
 				throw new Exception('Storage not set');
-		}
+			}
 
-		if ($this->isCacheEnabled()
+			$fileId = $this->_storage->generateContentId($fileName);
+			
+			if ($this->isCacheEnabled()
 				&& $this->_storage->isFresh($fileId)) {
+				return $this->_storage->fetch($fileId);
+			}
+
+			// file is not fresh, so compile and cache it
+			$this->_storage->cache($fileId, $this->_compiler->parseFile($fileName));
 			return $this->_storage->fetch($fileId);
 		}
-
-		// file is not fresh, so compile and cache it
-		$this->_storage->cache($fileId, $this->_compiler->parseFile($fileName));
-		return $this->_storage->fetch($fileId);
-	}
-
-	private function generateFileId($filename)
-	{
-		return str_replace(array(':','/','\\'), '_', ltrim($filename, '/\\'));
+		
+		// not using cache
+		return $this->_compiler->parseFile($fileName);
 	}
 	
 	public function evaluate($content, array $contentVariables = array())

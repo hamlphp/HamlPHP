@@ -1,19 +1,12 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
 
-class FilterTest extends PHPUnit_Framework_TestCase
+class FilterTest extends BaseTestCase
 {
-  protected $compiler = null;
-
-  public function __construct()
-  {
-    $this->compiler = getTestCompiler();
-  }
-
   public function testAttributes()
   {
-    $actual = $this->compiler->parseFile(template_path('filters'));
-    $this->assertEquals(expected_result('filters'), $actual);
+    $actual = $this->compiler->parseFile( $this->getTemplatePath('filters'));
+    $this->assertEquals( $this->getExpectedResult('filters'), $actual);
   }
 }

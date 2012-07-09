@@ -1,23 +1,24 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
+require_once 'BaseTestCase.php';
 
-class ElementNodeTest extends PHPUnit_Framework_TestCase {
-    private $compiler;
-    
-    public function setUp() {
-        $this->compiler = getTestCompiler();
-    }
-    
+class ElementNodeTest extends BaseTestCase 
+{   
     public function testExplicitlyClosingElement() {
         $code = "%img{:src => 'my_image.jpg'}/";
-        $result = $this->compiler->parseString($code);
-        $this->assertEquals("<img src='my_image.jpg' />\n", $result);
+        $result = trim($this->compiler->parseString($code));
+        
+        if(empty($result))
+        	$this->fail("Compilation result is empty");
+        
+        $this->compareXmlStrings("<img src='my_image.jpg' />", $result);
     }
     
     public function testElementsWithTemplate() {
-        $actual = $this->compiler->parseFile(template_path('elements'));
-        $this->assertEquals(expected_result('elements'), $actual);
+        $actual = $this->compiler->parseFile( $this->getTemplatePath('elements'));
+        //$this->assertEquals( $this->getExpectedResult('elements'), $actual);
+        
     }
 }
 

@@ -1,8 +1,8 @@
 <?php
 
-require_once 'Filter.php';
+require_once 'IFilter.php';
 
-class CssFilter implements Filter
+class CssFilter implements IFilter
 {
   public function getIdentifier()
   {

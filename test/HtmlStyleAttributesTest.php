@@ -1,21 +1,13 @@
 <?php
 
-require_once 'test_helper.php';
-require_once HAMLPHP_ROOT . 'ContentEvaluator/DefaultContentEvaluator.php';
+require_once 'BaseTestCase.php';
+require_once HAMLPHP_ROOT . 'ContentEvaluator/ContentEvaluator.php';
 
 /**
  * test case.
  */
-class HtmlStyleAttributesTest extends PHPUnit_Framework_TestCase
+class HtmlStyleAttributesTest extends BaseTestCase
 {
-	protected $compiler = null;
-	protected $evaluator = null;
-
-	public function setUp() {
-		$this->compiler = getTestCompiler();
-		$this->evaluator = new DefaultContentEvaluator();
-	}
-
 	/**
 	 * @test
 	 * 

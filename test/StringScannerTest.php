@@ -1,10 +1,10 @@
 <?php
 
-require_once 'test_helper.php';
+require_once 'BaseTestCase.php';
 
 require_once HAMLPHP_ROOT . "/Util/StringScanner.php";
 
-class StringScannerTest extends PHPUnit_Framework_TestCase
+class StringScannerTest extends BaseTestCase
 {
 	public function testScan()
 	{
