@@ -19,8 +19,11 @@
     </script>
     <?php
     $variable = 1;
-    function helloWorld() {
-      return 'Hello world';
+    if(!function_exists('helloWorld'))
+    {
+	    function helloWorld() {
+    	  return 'Hello world';
+    	}
     }
     ?>
   </head>
