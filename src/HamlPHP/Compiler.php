@@ -44,6 +44,21 @@ class Compiler
 		$lines = explode("\n", trim((string) $rawString));
 		return $this->parseLines($lines);
 	}
+	
+	/**
+	 * Returns the indent level of a line.
+	 * 
+	 * The indent level is the number of characters used to indent the line.
+	 * So, a tab = 1, a space, also equals 1.
+	 * 
+	 * @param string $line The line
+	 * 
+	 * @return int
+	 */
+	private function getIndentLevel($line)
+	{
+		return mb_strlen($line) - mb_strlen(trim($line));
+	}
 
 	/**
 	 * Compiles haml from an array of lines.
@@ -63,16 +78,32 @@ class Compiler
 		{
 			try
 			{
-				$rootNode->addNode($nodeFactory->createNode($this->_lines[$this->_currLine], $this->_currLine, $this));
+				if($this->getIndentLevel($this->_lines[$this->_currLine]) <= $filterIndentLevel)
+					$filterContext = false;
+				
+				if($filterContext)
+					$nd = new HamlNode($this->_lines[$this->_currLine]);
+				else
+					$nd = $nodeFactory->createNode($this->_lines[$this->_currLine], $this->_currLine, $this);
+				
+				if($nd instanceof FilterNode) {
+					if($filterContext)
+						throw new SyntaxErrorException('You cannot nest filters.');
+					
+					$filterContext = true;
+					$filterIndentLevel = $this->getIndentLevel($this->_lines[$this->_currLine]);
+				}
+				
+				$rootNode->addNode($nd);
 			}
 			catch(Exception $e)
 			{
 				$line = "UNKNOWN (sorry!)";
 				
-				if(isset($rawLines[$this->_currLine]))
-					$line = isset($rawLines[$this->_currLine]);
-				else if(isset($rawLines[$this->_currLine-1]))
-					$line = $rawLines[$this->_currLine-1];
+				if(isset($this->_lines[$this->_currLine]))
+					$line = $this->_lines[$this->_currLine];
+				else if(isset($this->_lines[$this->_currLine-1]))
+					$line = $this->_lines[$this->_currLine-1];
 				
 				throw new SyntaxErrorException("Error parsing line:\n{$line}\n" . $e->getMessage(), $e->getCode());
 			}
@@ -108,6 +139,7 @@ class Compiler
 		return null;
 	}
 
+	// @todo We CANNOT remove empty lines inside some filters (eg the planned markdown filter), actually, i think we shouldn't do this at all 
 	private function removeEmptyLines(array $rawLines)
 	{
 		$codeLines = array();
