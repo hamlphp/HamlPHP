@@ -66,10 +66,10 @@ function atts($atts, $echo=true)
 		{
 			if('id' == (string)$name && is_array($value))
 			{
-				$str .= ' id="'.join('_', $value);
+				$str .= ' id="'.join('_', $value).'"';
 			}
 			elseif ('class' == (string)$name && is_array($value))
-				$str .= ' class="'.join(' ', $value);
+				$str .= ' class="'.join(' ', $value).'"';
 			else
 				$str .= " $name=".quote($value);
 		}
