@@ -39,10 +39,13 @@ class HamlPHP
 		'escape_html' => false
 	);
 
-	public function __construct(IStorage $storage)
+	public function __construct(IStorage $storage = null)
 	{
 		$this->_compiler = $this->getCompiler();
-		$this->_storage = $storage;
+		if(empty($storage))
+			$this->_cacheEnabled = false;
+		else
+			$this->_storage = $storage;
 	}
 
 	/**
