@@ -8,7 +8,7 @@ class FilterTest extends BaseTestCase
   {
     $actual = $this->compiler->parseFile($this->getTemplatePath('filters'));
 	$expected = $this->getExpectedResult('filters');
-
+	
 	$actual = $this->evaluator->evaluate($actual);
 	$expected = $this->evaluator->evaluate($expected);
 

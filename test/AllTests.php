@@ -13,6 +13,7 @@ require_once 'HamlPHPClassTest.php';
 require_once 'HelpersTest.php';
 require_once 'HtmlStyleAttributesTest.php';
 require_once 'InterpolationTest.php';
+require_once 'MarkdownFilterTest.php';
 require_once 'ObjectReferenceTest.php';
 require_once 'StringScannerTest.php';
 require_once 'TagNodeTest.php';
@@ -42,6 +43,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
 		$this->addTestSuite('HelpersTest');
 		$this->addTestSuite('HtmlStyleAttributesTest');
 		$this->addTestSuite('InterpolationTest');
+		$this->addTestSuite('MarkdownFilterTest');
 		$this->addTestSuite('ObjectReferenceTest');
 		$this->addTestSuite('StringScannerTest');
 		$this->addTestSuite('TagNodeTest');

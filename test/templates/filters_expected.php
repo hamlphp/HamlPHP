@@ -3,13 +3,16 @@
   <head>
     <style type="text/css">
       body { color: #000; }
+      
       p {
         color: #fff;
       }
+      
       #container { color: #fff; }
     </style>
     %p should not render
     / neither this
+    
     <script type="text/javascript">
       $(function() {
         function helloWorld() {

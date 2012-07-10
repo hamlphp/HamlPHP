@@ -54,7 +54,7 @@ class HtmlStyleAttributesTest extends BaseTestCase
 	{
 		$actual = trim($this->compiler->parseString(
 			'%input(selected)'));
-		echo "|$actual|\n";
+	
 		$expected = '<input selected="selected"></input>';
 		
 		$this->assertEquals($expected, $actual);

@@ -19,8 +19,7 @@ class TagNodeTest extends BaseTestCase
   {
     $actual = $this->compiler->parseFile( $this->getTemplatePath('conditions'));
     $expected = $this->getExpectedResult('conditions');
-
-    echo $actual;
+	
     $actual = $this->evaluator->evaluate($actual);
     $expected = $this->evaluator->evaluate($expected);
     

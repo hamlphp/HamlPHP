@@ -29,7 +29,7 @@ class ObjectReferenceTest extends BaseTestCase
 		
 		$actual = trim($this->compiler->parseString('.fancy[$user]'));
 		$evaluated = $this->evaluator->evaluate($actual, array('user' => $user));
-		echo $actual."\n";
+		
 		$output = '<div id="std_class_1" class="fancy std_class"></div>';
 		
 		$this->assertEquals($output, $evaluated);
@@ -49,7 +49,7 @@ class ObjectReferenceTest extends BaseTestCase
 		$actual = trim($this->compiler->parseString('.fancy[$user, :this_is]'));
 		$evaluated = $this->evaluator->evaluate($actual, array('user' => $user));
 		$output = '<div id="this_is_std_class_1" class="fancy this_is_std_class"></div>';
-		echo $actual."\n";
+		
 		$this->assertEquals($output, $evaluated);
 	}
 	
@@ -67,13 +67,13 @@ class ObjectReferenceTest extends BaseTestCase
 		$evaluated = $this->evaluator->evaluate($actual, array('user' => $user));
 		$output = '<div id="user_1" class="fancy user"></div>';
 		$this->assertEquals($output, $evaluated);
-		echo $actual."\n";
+		
 		$user = new ClassWithMethod_haml_obj_ref();
 		
 		$actual = trim($this->compiler->parseString('.fancy[$user]'));
 		$evaluated = $this->evaluator->evaluate($actual, array('user' => $user));
 		$output = '<div id="user_2" class="fancy user"></div>';
-		echo $actual."\n";
+		
 		$this->assertEquals($output, $evaluated);
 	}
 	
@@ -87,7 +87,7 @@ class ObjectReferenceTest extends BaseTestCase
 		$actual = trim($this->compiler->parseString('.fancy[$user]'));
 		$evaluated = $this->evaluator->evaluate($actual, array('user' => $user));
 		$output = '<div id="user_123" class="fancy user"></div>';
-		echo $actual."\n";
+		
 		$this->assertEquals($output, $evaluated);
 	}
 }

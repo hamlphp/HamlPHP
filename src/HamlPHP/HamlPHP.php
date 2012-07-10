@@ -70,7 +70,9 @@ class HamlPHP
 			$filterContainer->addFilter(new PlainFilter());
 			$filterContainer->addFilter(new JavascriptFilter());
 			$filterContainer->addFilter(new PhpFilter());
-
+			$filterContainer->addFilter(new MarkdownFilter());
+			$filterContainer->addFilter(new MarkdownExtraFilter());
+				
 			$this->_filterContainer = $filterContainer;
 		}
 

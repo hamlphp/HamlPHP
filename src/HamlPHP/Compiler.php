@@ -7,6 +7,8 @@ require_once 'Filter/CssFilter.php';
 require_once 'Filter/PlainFilter.php';
 require_once 'Filter/JavascriptFilter.php';
 require_once 'Filter/PhpFilter.php';
+require_once 'Filter/MarkdownFilter.php';
+require_once 'Filter/MarkdownExtraFilter.php';
 
 class Compiler
 {
@@ -68,47 +70,54 @@ class Compiler
 	public function parseLines(array $rawLines = array())
 	{
 		$this->_currLine = 0;
-		$this->_lines = $this->removeEmptyLines($rawLines);
+		$this->_lines = $rawLines; // $this->removeEmptyLines($rawLines);
 		$rootNode = new RootNode();
 		$rootNode->setCompiler($this);
 		$rootNode->setLineNumber(0);
 		$nodeFactory = $this->_hamlphp->getNodeFactory();
 		
+		$filterContext = false;
+		$filterIndentLevel = 0;
+		$filterNode = null;
+		
 		for($len = count($this->_lines); $this->_currLine < $len; ++$this->_currLine)
 		{
+			$currLine = $this->_lines[$this->_currLine];
+			
 			try
 			{
-				if($this->getIndentLevel($this->_lines[$this->_currLine]) <= $filterIndentLevel)
+				if($this->getIndentLevel($currLine) <= $filterIndentLevel)
 					$filterContext = false;
 				
-				if($filterContext)
-					$nd = new HamlNode($this->_lines[$this->_currLine]);
-				else
-					$nd = $nodeFactory->createNode($this->_lines[$this->_currLine], $this->_currLine, $this);
-				
-				if($nd instanceof FilterNode) {
-					if($filterContext)
-						throw new SyntaxErrorException('You cannot nest filters.');
-					
-					$filterContext = true;
-					$filterIndentLevel = $this->getIndentLevel($this->_lines[$this->_currLine]);
+				if($filterContext) {
+					$nd = new HamlNode($currLine);
+					$filterNode->addNode($nd);
 				}
+				else {
+					if(trim($currLine) == '') {
+						continue;
+					}
+					
+					$nd = $nodeFactory->createNode($currLine, $this->_currLine, $this);
 				
-				$rootNode->addNode($nd);
+					if($nd instanceof FilterNode) {
+						if($filterContext)
+							throw new SyntaxErrorException('You cannot nest filters.');
+	
+						$filterContext = true;
+						$filterNode = $nd;
+						$filterIndentLevel = $this->getIndentLevel($currLine);
+					}
+					
+					$rootNode->addNode($nd);
+				}
 			}
 			catch(Exception $e)
 			{
-				$line = "UNKNOWN (sorry!)";
-				
-				if(isset($this->_lines[$this->_currLine]))
-					$line = $this->_lines[$this->_currLine];
-				else if(isset($this->_lines[$this->_currLine-1]))
-					$line = $this->_lines[$this->_currLine-1];
-				
-				throw new SyntaxErrorException("Error parsing line:\n{$line}\n" . $e->getMessage(), $e->getCode());
+				throw new SyntaxErrorException("Error parsing line:\n{$currLine}\n" . $e->getMessage(), $e->getCode());
 			}
 		}
-		
+	
 		return $rootNode->render();
 	}
 

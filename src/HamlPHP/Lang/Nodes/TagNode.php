@@ -104,17 +104,31 @@ class TagNode extends HamlNode
       return TagNode::LOUD_MODE == $this->_mode;
   }
 
+  private function getIndentOfLine($line)
+  {
+  	return mb_strlen($line) - mb_strlen(trim($line));
+  }
+  
   private function generateTagContent()
   {
     $content = $this->getSpaces() . "<?php " . $this->_code . " ?>\n";
     $content .= $this->renderChildren();
 
     $compiler = $this->getCompiler();
-    $nextLine = $compiler->getLine($this->getLineNumber() + $this->getChildrenCount() + 1);
+    
+    // checking if there is an appended tag
+    $currLine = $this->getLineNumber() + $this->getChildrenCount() + 1;
+    
+    do {
+    	$line = $compiler->getLine($currLine);
+    	$currLine++;
+    }
+    while ($line !== null && (trim($line) == '' || $this->getIndentOfLine($line) > $this->getIndentationLevel()));
+    
     $nextLineTag = null;
 
-    if ($nextLine !== null && $this->isTag($nextLine)) {
-      $nextLineTag = new TagNode($nextLine);
+    if ($line !== null && $this->isTag($line)) {
+      $nextLineTag = new TagNode($line);
     }
 
     if (!($nextLineTag !== null

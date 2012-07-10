@@ -2,12 +2,12 @@
 
 class RootNode
 {
-  private $_children;
-  private $_indentation;
-  private $_childrenCount;
-  private $_parent;
-  private $_compiler;
-  private $_lineNumber;
+  protected $_children;
+  protected $_indentation;
+  protected $_childrenCount;
+  protected $_parent;
+  protected $_compiler;
+  protected $_lineNumber;
 
   public function __construct()
   {
@@ -84,6 +84,7 @@ class RootNode
 
   protected function shouldGoInsideLastNode($node)
   {
+  	// @todo add some doc here explaining why this
     if ($this->_childrenCount == 0) {
       return false;
     }
