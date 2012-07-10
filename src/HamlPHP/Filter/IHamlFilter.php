@@ -1,6 +1,6 @@
 <?php
 
-interface IFilter
+interface IHamlFilter
 {
   /**
    * Returns an identifier of this filter.

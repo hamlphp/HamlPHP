@@ -1,9 +1,9 @@
 <?php
 
-require_once 'IFilter.php';
+require_once 'IHamlFilter.php';
 require_once HAMLPHP_ROOT . 'vendor/MarkdownExtra/markdown.php';
 
-class MarkdownFilter implements IFilter
+class MarkdownFilter implements IHamlFilter
 {
 	/**
 	 * @var Markdown_Parser

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'IFilter.php';
+require_once 'IHamlFilter.php';
 
 class FilterContainer
 {
@@ -13,7 +13,7 @@ class FilterContainer
     }
   }
 
-  public function addFilter(IFilter $filter)
+  public function addFilter(IHamlFilter $filter)
   {
     $this->_filters[$filter->getIdentifier()] = $filter;
   }

@@ -1,8 +1,8 @@
 <?php
 
-require_once 'IFilter.php';
+require_once 'IHamlFilter.php';
 
-class CssFilter implements IFilter
+class CssFilter implements IHamlFilter
 {
   public function getIdentifier()
   {

@@ -1,8 +1,8 @@
 <?php
 
-require_once 'IFilter.php';
+require_once 'IHamlFilter.php';
 
-class PlainFilter implements IFilter
+class PlainFilter implements IHamlFilter
 {
   public function getIdentifier()
   {
