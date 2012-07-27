@@ -66,7 +66,7 @@ class StringHelper
 	 * Returns the current CamelCased string as an underscored_case string
 	 */
 	public function underscorize() {
-		return strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', lcfirst($this->value)));
+		return mb_strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', mb_strtolower(mb_substr($this->value,0,1)).mb_substr($this->value,1)));
 	}
 	
 	public function __toString()
