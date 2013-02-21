@@ -41,7 +41,7 @@ $parser = new HamlPHP(new FileStorage(dirname(__FILE__) . '/tmp/'));
 
 $content = $parser->parseFile('index.haml');
 
-echo $content;
+echo $parser->evaluate($content);
 ```
 
 The compilation result will look like this:
