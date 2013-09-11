@@ -331,11 +331,11 @@ class Element
 				{
 					if ($scanner[0] == 'true')
 						$atts[$name] = array(
-							't' => 'static' , 'v' => true
+							't' => 'boolean' , 'v' => true
 						);
 					else
 						$atts[$name] = array(
-							't' => 'static' , 'v' => false
+							't' => 'boolean' , 'v' => false
 						);
 				}
 				else
