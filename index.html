@@ -3,84 +3,134 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
     <title>HamlPHP by hamlphp</title>
   </head>
 
   <body>
-    <div id="container">
+    <header>
       <div class="inner">
+        <h1>HamlPHP</h1>
+        <h2>Yet another Haml to HTML converter written in PHP.</h2>
+        <a href="https://github.com/hamlphp/HamlPHP" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-        <header>
-          <h1>HamlPHP</h1>
-          <h2>Yet another Haml to HTML converter written in PHP.</h2>
-        </header>
-
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/hamlphp/HamlPHP/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="class-docs/" id="class-api-docs" class="button"><span>Class Api Docs</span></a>
-          <a href="https://github.com/hamlphp/HamlPHP" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h1>HamlPHP</h1>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="hamlphp" class="anchor" href="#hamlphp"><span class="octicon octicon-link"></span></a>HamlPHP</h1>
 
 <p>Yet another Haml to HTML converter written in PHP.</p>
 
-<h2>Requirements</h2>
+<p>Check the <a href="https://github.com/hamlphp/HamlPHP/wiki">Wiki</a> we've been adding some docs.</p>
+
+<h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
 
 <p>PHP 5.2 or newer.</p>
 
-<h2>Usage</h2>
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>The simplest way to use HamlPHP is to manually. You can use mod_rewrite to redirect all your requests to index.php and render the .haml files from there. We'll add this example later. HamlPHP will cache compilation results, so the .haml file is only compiled to php once.</p>
 
 <p>index.haml</p>
 
-<pre><code>!!! 5
-%html
-    %body
-        #container
-            %ul.navigation
-                %li Etusivu
-                %li Tuotteet
+<div class="highlight highlight-haml"><pre><span class="nn">!!! 5</span>
+<span class="nt">%html</span>
+    <span class="nt">%body</span>
+        <span class="nf">#container</span>
+            <span class="nt">%ul</span><span class="nc">.navigation</span>
+                <span class="nt">%li</span> Etusivu
+                <span class="nt">%li</span> Tuotteet
 
-            %h2 Tuotteet
-            %ul.products 
-                %li= 1 * 6
-                - for ($i = 0; $i &lt; 10; $i++)
-                    %li= $i + 3
-</code></pre>
+            <span class="nt">%h2</span> Tuotteet
+            <span class="nt">%ul</span><span class="nc">.products</span>
+                <span class="p">-</span> <span class="k">for</span> <span class="p">(</span><span class="vg">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="vg">$i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="vg">$i</span><span class="o">++</span><span class="p">)</span>
+                    <span class="nt">%li</span><span class="p">=</span> <span class="vg">$i</span> <span class="o">*</span> <span class="mi">7</span>
+</pre></div>
 
 <p>In your index.php</p>
 
-<pre><code>&lt;?php
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">require_once</span> <span class="s1">'src/HamlPHP/HamlPHP.php'</span><span class="p">;</span>
+<span class="k">require_once</span> <span class="s1">'src/HamlPHP/Storage/FileStorage.php'</span><span class="p">;</span>
 
-require_once 'src/HamlPHP/HamlPHP.php';
-require_once 'src/HamlPHP/Storage/FileStorage.php';
+<span class="c1">// Make sure that a directory _tmp_ exists in your application and it is writable.</span>
+<span class="nv">$parser</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HamlPHP</span><span class="p">(</span><span class="k">new</span> <span class="nx">FileStorage</span><span class="p">(</span><span class="nb">dirname</span><span class="p">(</span><span class="k">__FILE__</span><span class="p">)</span> <span class="o">.</span> <span class="s1">'/tmp/'</span><span class="p">));</span>
 
-// Make sure that a directory _tmp_ exists in your application and it is writable.
-$parser = new HamlPHP(new FileStorage(dirname(__FILE__) . '/tmp/'));
+<span class="nv">$content</span> <span class="o">=</span> <span class="nv">$parser</span><span class="o">-&gt;</span><span class="na">parseFile</span><span class="p">(</span><span class="s1">'index.haml'</span><span class="p">);</span>
 
-$content = $parser-&gt;parseFile('index.haml');
+<span class="k">echo</span> <span class="nv">$parser</span><span class="o">-&gt;</span><span class="na">evaluate</span><span class="p">(</span><span class="nv">$content</span><span class="p">);</span>
+</pre></div>
 
-echo $content;
-</code></pre>
+<p>The compilation result will look like this:</p>
+
+<div class="highlight highlight-html"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"navigation"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;li&gt;</span>Etusivu<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>Tuotteet<span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;/ul&gt;</span>
+      <span class="nt">&lt;h2&gt;</span>Tuotteet<span class="nt">&lt;/h2&gt;</span>
+      <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"products"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;li&gt;</span>0<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>7<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>14<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>21<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>28<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>35<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>42<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>49<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>56<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>63<span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;/ul&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
         </section>
 
-        <footer>
-          HamlPHP is maintained by <a href="https://github.com/hamlphp">hamlphp</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+        <aside id="sidebar">
+          <a href="https://github.com/hamlphp/HamlPHP/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/hamlphp/HamlPHP/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
 
-        
+          <p class="repo-owner"><a href="https://github.com/hamlphp/HamlPHP"></a> is maintained by <a href="https://github.com/hamlphp">hamlphp</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
       </div>
     </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-37446627-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
