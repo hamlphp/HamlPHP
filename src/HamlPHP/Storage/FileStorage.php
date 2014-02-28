@@ -51,10 +51,14 @@ class FileStorage implements IStorage
 	 *
 	 * @see Storage::isFresh()
 	 */
-	public function isFresh($id)
+	public function isFresh($id, $fileName = false)
 	{
 		$path = $this->_path . $id . $this->_extension;
-		
+		if($fileName) 
+		{
+			$id = $fileName;
+		}
+
 		return file_exists($id) && file_exists($path) && filemtime($id) < filemtime($path);
 	}
 
