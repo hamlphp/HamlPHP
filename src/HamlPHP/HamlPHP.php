@@ -176,7 +176,7 @@ class HamlPHP
 			$fileId = $this->_storage->generateContentId($fileName);
 			
 			if ($this->isCacheEnabled()
-				&& $this->_storage->isFresh($fileId)) {
+				&& $this->_storage->isFresh($fileId, $fileName)) {
 				return $this->_storage->fetch($fileId);
 			}
 
