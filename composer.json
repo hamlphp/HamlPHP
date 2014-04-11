@@ -10,5 +10,8 @@
             "name": "Saulo Vallory",
             "email": "me@saulovallory.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {"HamlPHP\\": "src/HamlPHP/"}
+    }
 }
