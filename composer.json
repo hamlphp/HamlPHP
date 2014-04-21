@@ -12,6 +12,6 @@
         }
     ],
     "autoload": {
-        "psr-4": {"HamlPHP\\": "src/HamlPHP/"}
+        "files": ["src/HamlPHP/HamlPHP.php", "src/HamlPHP/Storage/FileStorage.php"]
     }
 }
