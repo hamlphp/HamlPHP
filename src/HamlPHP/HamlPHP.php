@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Config.php';
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR .'Config.php';
 require_once 'Storage/IStorage.php';
 require_once 'Compiler.php';
 
