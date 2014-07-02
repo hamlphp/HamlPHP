@@ -13,6 +13,8 @@ class Element
 	const ID = '#';
 	const KLASS = '.';
 
+	private static $_selfClosingTags = array( 'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr' );
+
 	private $_haml = null;
 	private $_tag = null;
 	private $_id = null;
@@ -329,11 +331,11 @@ class Element
 				{
 					if ($scanner[0] == 'true')
 						$atts[$name] = array(
-							't' => 'static' , 'v' => true
+							't' => 'boolean' , 'v' => true
 						);
 					else
 						$atts[$name] = array(
-							't' => 'static' , 'v' => false
+							't' => 'boolean' , 'v' => false
 						);
 				}
 				else
@@ -490,11 +492,11 @@ class Element
 					{
 						if ($scanner[0] == 'true')
 							$atts[$name] = array(
-								't' => 'static' , 'v' => true
+								't' => 'boolean' , 'v' => true
 							);
 						else
 							$atts[$name] = array(
-								't' => 'static' , 'v' => false
+								't' => 'boolean' , 'v' => false
 							);
 					}
 					else
@@ -635,7 +637,7 @@ class Element
 	}
         
 	public function isSelfClosing() {
-		return $this->_selfClosing;
+		return $this->_selfClosing || in_array($this->getTag(), self::$_selfClosingTags);
 	}
 }
 

@@ -61,7 +61,7 @@ function atts($atts, $echo=true)
 		
 		if($value === true)
 		{
-			$str .= " $name=\"$name\"";
+			$str .= " $name";
 		}
 		else
 		{

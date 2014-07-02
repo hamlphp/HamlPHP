@@ -78,6 +78,14 @@ class ElementNode extends HamlNode
 						case 'function':
 							$output .= "{$att['v']}, ";
 							continue;
+						case 'boolean':
+							if( Config::$format == 'html5' ) {
+								$output .= "'$name' => ".($att['v'] ? 'true' : 'false').", ";
+							} else {
+								if( $att['v'] == true ) {
+									$output .= "'$name' => '$name', ";
+								}
+							}
 					}
 				}
 			}
@@ -125,7 +133,15 @@ class ElementNode extends HamlNode
 		
 		if($this->_el->isSelfClosing())
 		{
-			$output .= ' />';
+			switch( Config::$format ) {
+			case 'html5':
+			case 'html4':
+				$output .= '>';
+				break;
+			default:
+				$output .= '/>';
+				break;
+			}
 		}
 		else
 		{
