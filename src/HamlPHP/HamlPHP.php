@@ -188,6 +188,35 @@ class HamlPHP
 		// not using cache
 		return $this->_compiler->parseFile($fileName);
 	}
+
+	/**
+	 * Parses a haml string and returns the compile result.
+	 *
+	 * @param string $string
+	 */
+	public function parseString($string)
+	{
+		if($this->_cacheEnabled)
+		{
+			if ($this->_storage === null) {
+				throw new Exception('Storage not set');
+			}
+
+			$fileId = $this->_storage->generateContentId(sha1($string));
+
+			if ($this->isCacheEnabled()
+				&& $this->_storage->isFresh($fileId, sha1($string))) {
+				return $this->_storage->fetch($fileId);
+			}
+
+			// file is not fresh, so compile and cache it
+			$this->_storage->cache($fileId, $this->_compiler->parseString($string));
+			return $this->_storage->fetch($fileId);
+		}
+
+		// not using cache
+		return $this->_compiler->parseString($string);
+	}
 	
 	public function evaluate($content, array $contentVariables = array())
 	{
